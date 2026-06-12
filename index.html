@@ -288,9 +288,8 @@
             color: white;
             cursor: pointer;
             backdrop-filter: blur(4px);
+            display: none;
         }
-        .hero-image-upload { display: none; }
-        
         .edit-hero-text-btn {
             position: absolute;
             bottom: 20px;
@@ -393,9 +392,9 @@
             z-index: 5;
             display: none;
         }
-        .product-card:hover .product-image-upload { display: block; }
+        .edit-buttons { display: none; }
+        .edit-buttons.visible { display: flex; }
 
-        /* О СЕБЕ - вертикальный прямоугольник */
         .about-flex { display: flex; gap: 50px; flex-wrap: wrap; align-items: stretch; }
         .about-text { flex: 1.2; }
         .about-text p { font-size: 0.9rem; color: #444; line-height: 1.6; white-space: pre-line; }
@@ -423,7 +422,6 @@
         }
         .about-img:hover .image-upload-overlay { display: block; }
 
-        /* КОНТАКТЫ - вертикальный прямоугольник для фото галереи */
         .contacts-grid { display: flex; flex-wrap: wrap; gap: 40px; align-items: stretch; }
         .contact-info { flex: 1; background: #fafafa; padding: 28px; }
         .contact-info p { font-size: 0.85rem; margin-bottom: 16px; }
@@ -519,7 +517,6 @@
             .about-flex { flex-direction: column; }
             .contacts-grid { flex-direction: column; }
             :root { --container-padding: 16px; }
-            .form-row { flex-direction: column; }
         }
         
         .page { display: none; }
@@ -553,6 +550,7 @@
             transition: all 0.2s;
             display: none;
         }
+        .edit-text-btn.visible { display: inline-block; }
         .edit-text-btn:hover { background: #b97f44; }
     </style>
 </head>
@@ -576,7 +574,6 @@
 
 <main>
     <div class="container">
-        <!-- ГЛАВНАЯ -->
         <div id="page-home" class="page active-page">
             <div class="hero-full" id="heroSection" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 800\'%3E%3Cdefs%3E%3ClinearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%238B5A2B\'/%3E%3Cstop offset=\'50%25\' stop-color=\'%23B97F44\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%23D4A373\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'1200\' height=\'800\' fill=\'url(%23g)\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'220\' fill=\'none\' stroke=\'rgba(255,255,255,0.15)\' stroke-width=\'2\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'160\' fill=\'none\' stroke=\'rgba(255,255,255,0.1)\' stroke-width=\'1.5\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'100\' fill=\'none\' stroke=\'rgba(255,255,255,0.08)\' stroke-width=\'1\'/%3E%3C/svg%3E')">
                 <div class="hero-content">
@@ -587,12 +584,9 @@
                 <div class="hero-image-upload" id="uploadHeroBtnAdm">📷 Заменить фон</div>
                 <div class="edit-hero-text-btn" id="editHeroTextBtn">✏️ Редактировать текст</div>
             </div>
-            <div style="margin-top:40px; text-align:center;">
-                <p style="color:#666;">Современная живопись / Энергия цвета</p>
-            </div>
+            <div style="margin-top:40px; text-align:center;"><p style="color:#666;">Современная живопись / Энергия цвета</p></div>
         </div>
 
-        <!-- МАГАЗИН (ОРИГИНАЛЫ) -->
         <div id="page-shop" class="page">
             <div class="section-title">Оригиналы</div>
             <div class="products-grid" id="shopGrid"></div>
@@ -610,7 +604,6 @@
             </div>
         </div>
 
-        <!-- ПРИНТЫ -->
         <div id="page-prints" class="page">
             <div class="section-title">Принты</div>
             <div class="products-grid" id="printsGrid"></div>
@@ -628,7 +621,6 @@
             </div>
         </div>
 
-        <!-- О СЕБЕ - фото вертикальное -->
         <div id="page-about" class="page">
             <div class="section-title">Художник</div>
             <div class="about-flex">
@@ -642,7 +634,6 @@
             </div>
         </div>
 
-        <!-- КОНТАКТЫ - фото галереи вертикальное -->
         <div id="page-contacts" class="page">
             <div class="section-title">Контакты</div>
             <div class="contacts-grid">
@@ -673,7 +664,6 @@
     </div>
 </div>
 
-<!-- Модальные окна -->
 <div class="modal" id="loginModal">
     <div class="modal-content">
         <span class="close-modal" id="closeModal">&times;</span>
@@ -755,7 +745,6 @@
         document.documentElement.style.setProperty('--main-font', fonts[fontName].main);
         document.documentElement.style.setProperty('--heading-font', fonts[fontName].heading);
         localStorage.setItem('siteFont', fontName);
-        currentFont = fontName;
     }
     
     function applyPadding(padding) {
@@ -840,17 +829,17 @@
         container.innerHTML = filtered.map(p => `
             <div class="product-card" data-id="${p.id}">
                 <div class="product-img" style="background-image:url('${p.imageUrl}')">
-                    ${isAdmin ? `<div class="product-image-upload" data-id="${p.id}">📷 Заменить фото</div>` : ''}
+                    <div class="product-image-upload" data-id="${p.id}">📷 Заменить фото</div>
                 </div>
                 <div class="product-info">
                     <div class="product-title">${escapeHtml(p.title)}</div>
                     <div class="product-price">${p.price.toLocaleString()} ₽</div>
                     <div class="product-desc">${escapeHtml(p.desc)}</div>
                     <button class="btn-buy" data-id="${p.id}">В корзину</button>
-                    ${isAdmin ? `<div class="edit-buttons">
+                    <div class="edit-buttons">
                         <button class="edit-btn" data-id="${p.id}">✏️ Ред.</button>
                         <button class="delete-btn" data-id="${p.id}">🗑️ Удалить</button>
-                    </div>` : ''}
+                    </div>
                 </div>
             </div>
         `).join('');
@@ -858,7 +847,10 @@
         document.querySelectorAll(`#${containerId} .btn-buy`).forEach(btn => {
             btn.onclick = (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); const p = products.find(pr => pr.id === id); if(p) showNotif(`✓ ${p.title} — в корзине`); };
         });
+        
         if(isAdmin) {
+            document.querySelectorAll(`#${containerId} .edit-buttons`).forEach(el => el.classList.add('visible'));
+            document.querySelectorAll(`#${containerId} .product-image-upload`).forEach(el => el.style.display = 'block');
             document.querySelectorAll(`#${containerId} .edit-btn`).forEach(btn => {
                 btn.onclick = (e) => { e.stopPropagation(); openProductEditor(parseInt(btn.dataset.id)); };
             });
@@ -945,27 +937,23 @@
         const newId = Date.now();
         let imageUrl = "https://placehold.co/600x700/f5f0eb/b97f44?text=" + encodeURIComponent(title);
         
-        if(imageFile) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const newProduct = { id: newId, title, price: parseInt(price), desc, type, imageUrl: ev.target.result };
-                products.push(newProduct);
-                saveProducts();
-                showNotif(`✅ "${title}" добавлен в ${type === 'original' ? 'Магазин' : 'Принты'}`);
-                renderProductGrid('shopGrid', 'original');
-                renderProductGrid('printsGrid', 'print');
-            };
-            reader.readAsDataURL(imageFile);
-            return true;
-        } else {
-            const newProduct = { id: newId, title, price: parseInt(price), desc, type, imageUrl };
+        const finishAdd = (imgUrl) => {
+            const newProduct = { id: newId, title, price: parseInt(price), desc, type, imageUrl: imgUrl };
             products.push(newProduct);
             saveProducts();
             showNotif(`✅ "${title}" добавлен в ${type === 'original' ? 'Магазин' : 'Принты'}`);
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
-            return true;
+        };
+        
+        if(imageFile) {
+            const reader = new FileReader();
+            reader.onload = (ev) => { finishAdd(ev.target.result); };
+            reader.readAsDataURL(imageFile);
+        } else {
+            finishAdd(imageUrl);
         }
+        return true;
     }
     
     function openTextEditor(type) {
@@ -1015,6 +1003,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
+    // Первоначальный рендер
     renderProductGrid('shopGrid', 'original');
     renderProductGrid('printsGrid', 'print');
     
@@ -1067,14 +1056,16 @@
             adminLoginBtn.classList.add('logged-in');
             adminLoginBtn.innerHTML = '<i class="fas fa-user-check"></i> Админ';
             
+            // ПОКАЗЫВАЕМ ВСЕ АДМИН-ЭЛЕМЕНТЫ
             document.getElementById('addShopForm').classList.add('visible');
             document.getElementById('addPrintsForm').classList.add('visible');
-            document.querySelectorAll('.edit-text-btn').forEach(btn => btn.style.display = 'inline-block');
+            document.querySelectorAll('.edit-text-btn').forEach(btn => btn.classList.add('visible'));
             document.getElementById('uploadHeroBtnAdm').style.display = 'block';
             document.getElementById('editHeroTextBtn').style.display = 'block';
             document.getElementById('uploadArtistImageBtn').style.display = 'block';
             document.getElementById('uploadGalleryImageBtn').style.display = 'block';
             
+            // Назначаем обработчики
             document.getElementById('uploadHeroBtnAdm').onclick = () => document.getElementById('uploadHeroImage').click();
             document.getElementById('editHeroTextBtn').onclick = () => openTextEditor('hero');
             document.getElementById('uploadArtistImageBtn').onclick = () => document.getElementById('uploadArtistImage').click();
@@ -1084,36 +1075,46 @@
                 btn.onclick = () => openTextEditor(btn.dataset.type);
             });
             
+            // Перерендериваем товары с админ-кнопками
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
             adminPanelModal.classList.add('active');
         } else { showNotif('Неверный пароль!'); }
     };
     
-    document.getElementById('addShopProductBtn')?.addEventListener('click', () => {
-        const title = document.getElementById('newShopTitle').value;
-        const price = document.getElementById('newShopPrice').value;
-        const desc = document.getElementById('newShopDesc').value;
-        const imageFile = document.getElementById('newShopImage').files[0];
-        addNewProduct('original', title, price, desc, imageFile);
-        document.getElementById('newShopTitle').value = '';
-        document.getElementById('newShopPrice').value = '';
-        document.getElementById('newShopDesc').value = '';
-        document.getElementById('newShopImage').value = '';
-    });
+    // Обработчики добавления товаров
+    const addShopBtn = document.getElementById('addShopProductBtn');
+    const addPrintBtn = document.getElementById('addPrintProductBtn');
     
-    document.getElementById('addPrintProductBtn')?.addEventListener('click', () => {
-        const title = document.getElementById('newPrintTitle').value;
-        const price = document.getElementById('newPrintPrice').value;
-        const desc = document.getElementById('newPrintDesc').value;
-        const imageFile = document.getElementById('newPrintImage').files[0];
-        addNewProduct('print', title, price, desc, imageFile);
-        document.getElementById('newPrintTitle').value = '';
-        document.getElementById('newPrintPrice').value = '';
-        document.getElementById('newPrintDesc').value = '';
-        document.getElementById('newPrintImage').value = '';
-    });
+    if(addShopBtn) {
+        addShopBtn.addEventListener('click', () => {
+            const title = document.getElementById('newShopTitle').value;
+            const price = document.getElementById('newShopPrice').value;
+            const desc = document.getElementById('newShopDesc').value;
+            const imageFile = document.getElementById('newShopImage').files[0];
+            addNewProduct('original', title, price, desc, imageFile);
+            document.getElementById('newShopTitle').value = '';
+            document.getElementById('newShopPrice').value = '';
+            document.getElementById('newShopDesc').value = '';
+            document.getElementById('newShopImage').value = '';
+        });
+    }
     
+    if(addPrintBtn) {
+        addPrintBtn.addEventListener('click', () => {
+            const title = document.getElementById('newPrintTitle').value;
+            const price = document.getElementById('newPrintPrice').value;
+            const desc = document.getElementById('newPrintDesc').value;
+            const imageFile = document.getElementById('newPrintImage').files[0];
+            addNewProduct('print', title, price, desc, imageFile);
+            document.getElementById('newPrintTitle').value = '';
+            document.getElementById('newPrintPrice').value = '';
+            document.getElementById('newPrintDesc').value = '';
+            document.getElementById('newPrintImage').value = '';
+        });
+    }
+    
+    // Загрузка фото
     document.getElementById('uploadHeroImage').onchange = (e) => {
         const file = e.target.files[0];
         if(file) {
