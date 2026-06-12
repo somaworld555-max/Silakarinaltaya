@@ -39,7 +39,7 @@
             to { opacity: 1; transform: scale(1); }
         }
         
-        .product-card { animation: scaleIn 0.4s ease forwards; opacity: 0; }
+        .product-card { animation: scaleIn 0.4s ease forwards; opacity: 0; cursor: pointer; }
         .hero-content { animation: fadeInUp 0.6s ease-out; }
         .section-title { animation: fadeInUp 0.5s ease; opacity: 0; animation-fill-mode: forwards; }
 
@@ -203,7 +203,6 @@
             cursor: pointer;
         }
         
-        /* Галерея просмотра фото */
         .lightbox {
             background: rgba(0,0,0,0.95);
             z-index: 3000;
@@ -216,7 +215,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 10;
+            background: none;
+            border: none;
+            transition: all 0.2s;
+        }
+        .lightbox-close:hover { opacity: 0.7; transform: scale(1.1); }
         .lightbox-img {
             max-width: 90vw;
             max-height: 80vh;
@@ -247,12 +260,14 @@
             background: #c44;
             color: white;
             border: none;
-            padding: 5px 10px;
-            font-size: 0.7rem;
+            padding: 8px 16px;
+            font-size: 0.8rem;
             cursor: pointer;
-            margin-left: 10px;
-            border-radius: 4px;
+            margin-top: 15px;
+            border-radius: 30px;
+            transition: all 0.2s;
         }
+        .delete-photo-btn:hover { background: #a33; }
 
         .style-preview {
             padding: 10px;
@@ -388,7 +403,6 @@
         .product-card {
             background: #ffffff;
             overflow: hidden;
-            cursor: pointer;
             border: 1px solid #f0f0f0;
             transition: all 0.3s ease;
             position: relative;
@@ -523,31 +537,6 @@
             transition: all 0.3s ease;
         }
         .add-product-btn:hover { background: #9b6236; transform: translateY(-2px); }
-
-        /* Миниатюры фото в админ-режиме */
-        .product-images-thumb {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .thumb-img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            cursor: pointer;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .add-image-btn {
-            background: #b97f44;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            font-size: 0.6rem;
-            cursor: pointer;
-            border-radius: 4px;
-        }
 
         footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.7rem; border-top: 1px solid #f0f0f0; margin-top: 20px; }
         .notification {
@@ -776,10 +765,9 @@
     </div>
 </div>
 
-<!-- Галерея/Лайтбокс для просмотра фото -->
 <div class="modal lightbox" id="lightboxModal">
     <div class="modal-content">
-        <span class="close-modal" id="closeLightbox">&times;</span>
+        <button class="lightbox-close" id="lightboxCloseBtn">&times;</button>
         <img class="lightbox-img" id="lightboxImg" src="" alt="">
         <div class="lightbox-nav">
             <button id="prevImgBtn"><i class="fas fa-chevron-left"></i> Назад</button>
@@ -793,7 +781,6 @@
 <input type="file" id="uploadHeroImage" accept="image/*" style="display:none">
 <input type="file" id="uploadArtistImage" accept="image/*" style="display:none">
 <input type="file" id="uploadGalleryImage" accept="image/*" style="display:none">
-<input type="file" id="tempProductImageUpload" accept="image/*" style="display:none">
 
 <script>
     // ===== ШРИФТЫ =====
@@ -825,7 +812,7 @@
     applyFont(currentFont);
     applyPadding(currentPadding);
     
-    // ===== СТРУКТУРА ТОВАРОВ С ГАЛЕРЕЯМИ =====
+    // ===== ТОВАРЫ С ГАЛЕРЕЯМИ =====
     let products = [
         { id: 1, title: "Вихрь Вдохновения", price: 24500, desc: "масло, холст / 70x90", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Вихрь+1", "https://placehold.co/800x1000/f0e5d8/b97f44?text=Вихрь+2"], mainImageIndex: 0 },
         { id: 2, title: "Сила Земли", price: 18700, desc: "акрил, холст / 60x80", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Сила+Земли"], mainImageIndex: 0 },
@@ -897,22 +884,31 @@
     
     function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
     
-    // Открытие галереи
     function openLightbox(productId, startIndex) {
         const product = products.find(p => p.id === productId);
-        if(!product || !product.images || product.images.length === 0) return;
+        if(!product) {
+            showNotif('Товар не найден');
+            return;
+        }
+        if(!product.images || product.images.length === 0) {
+            showNotif('У этого товара нет фото для просмотра');
+            return;
+        }
         currentLightboxProduct = product;
         currentLightboxIndex = startIndex;
         updateLightbox();
         document.getElementById('lightboxModal').classList.add('active');
-        document.getElementById('deleteFromLightboxBtn').style.display = isAdmin ? 'block' : 'none';
+        const deleteBtn = document.getElementById('deleteFromLightboxBtn');
+        if(deleteBtn) deleteBtn.style.display = isAdmin ? 'block' : 'none';
     }
     
     function updateLightbox() {
         if(!currentLightboxProduct) return;
         const img = currentLightboxProduct.images[currentLightboxIndex];
-        document.getElementById('lightboxImg').src = img;
-        document.getElementById('lightboxCounter').innerText = `${currentLightboxIndex + 1} / ${currentLightboxProduct.images.length}`;
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCounter = document.getElementById('lightboxCounter');
+        if(lightboxImg) lightboxImg.src = img;
+        if(lightboxCounter) lightboxCounter.innerText = `${currentLightboxIndex + 1} / ${currentLightboxProduct.images.length}`;
     }
     
     function nextImage() {
@@ -1001,21 +997,34 @@
             </div>`;
         }).join('');
         
-        // Обработчики
+        // Обработчик клика на карточку товара
         document.querySelectorAll(`#${containerId} .product-card`).forEach(card => {
             const id = parseInt(card.dataset.id);
             card.onclick = (e) => {
-                if(e.target.classList.contains('btn-buy') || e.target.classList.contains('edit-btn') || 
-                   e.target.classList.contains('delete-btn') || e.target.classList.contains('product-image-upload')) return;
+                // Если клик по кнопке — не открываем галерею
+                if(e.target.classList.contains('btn-buy') || 
+                   e.target.classList.contains('edit-btn') || 
+                   e.target.classList.contains('delete-btn') || 
+                   e.target.classList.contains('product-image-upload')) {
+                    return;
+                }
                 const product = products.find(p => p.id === id);
                 if(product && product.images && product.images.length > 0) {
                     openLightbox(id, 0);
+                } else {
+                    showNotif('У этого товара нет фото для просмотра');
                 }
             };
         });
         
+        // Кнопка "В корзину"
         document.querySelectorAll(`#${containerId} .btn-buy`).forEach(btn => {
-            btn.onclick = (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); const p = products.find(pr => pr.id === id); if(p) showNotif(`✓ ${p.title} — в корзине`); };
+            btn.onclick = (e) => { 
+                e.stopPropagation(); 
+                const id = parseInt(btn.dataset.id); 
+                const p = products.find(pr => pr.id === id); 
+                if(p) showNotif(`✓ ${p.title} — в корзине (демо)`); 
+            };
         });
         
         if(isAdmin) {
@@ -1150,7 +1159,7 @@
     });
     document.getElementById('exploreShopBtn')?.addEventListener('click', () => showPage('shop'));
     
-    // Админ-панель
+    // === АДМИН-ПАНЕЛЬ ===
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const loginModal = document.getElementById('loginModal');
     const adminPanelModal = document.getElementById('adminPanelModal');
@@ -1160,7 +1169,8 @@
     const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
     const closeProductModal = document.getElementById('closeProductModal');
     const closeTextModal = document.getElementById('closeTextModal');
-    const closeLightbox = document.getElementById('closeLightbox');
+    const lightboxModal = document.getElementById('lightboxModal');
+    const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
     const saveProductBtn = document.getElementById('saveProductBtn');
     const saveTextBtn = document.getElementById('saveTextBtn');
     const paddingSlider = document.getElementById('paddingSlider');
@@ -1173,7 +1183,7 @@
     closeModal.onclick = () => loginModal.classList.remove('active');
     closeProductModal.onclick = () => document.getElementById('editProductModal').classList.remove('active');
     closeTextModal.onclick = () => document.getElementById('editTextModal').classList.remove('active');
-    closeLightbox.onclick = () => document.getElementById('lightboxModal').classList.remove('active');
+    lightboxCloseBtn.onclick = () => lightboxModal.classList.remove('active');
     saveProductBtn.onclick = saveProductEdit;
     saveTextBtn.onclick = saveTextEdit;
     prevImgBtn.onclick = prevImage;
