@@ -28,11 +28,6 @@
             font-family: var(--heading-font);
         }
         
-        header .container {
-            padding-left: max(var(--container-padding), 20px);
-            padding-right: max(var(--container-padding), 20px);
-        }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         @keyframes fadeInUp {
@@ -45,12 +40,6 @@
         }
         
         .product-card { animation: scaleIn 0.4s ease forwards; opacity: 0; }
-        .product-card:nth-child(1) { animation-delay: 0.05s; }
-        .product-card:nth-child(2) { animation-delay: 0.1s; }
-        .product-card:nth-child(3) { animation-delay: 0.15s; }
-        .product-card:nth-child(4) { animation-delay: 0.2s; }
-        .product-card:nth-child(5) { animation-delay: 0.25s; }
-        .product-card:nth-child(6) { animation-delay: 0.3s; }
         .hero-content { animation: fadeInUp 0.6s ease-out; }
         .section-title { animation: fadeInUp 0.5s ease; opacity: 0; animation-fill-mode: forwards; }
 
@@ -175,7 +164,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -187,6 +176,7 @@
             width: 90%;
             max-width: 500px;
             position: relative;
+            border-radius: 4px;
         }
         .modal-content h3 { font-family: 'Playfair Display', serif; margin-bottom: 20px; }
         .modal-content input, .modal-content textarea, .modal-content select {
@@ -212,6 +202,58 @@
             font-size: 24px;
             cursor: pointer;
         }
+        
+        /* Галерея просмотра фото */
+        .lightbox {
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
+        }
+        .lightbox .modal-content {
+            background: transparent;
+            max-width: 90vw;
+            max-height: 90vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        .lightbox-nav {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .lightbox-nav button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: all 0.2s;
+        }
+        .lightbox-nav button:hover { background: rgba(255,255,255,0.4); }
+        .lightbox-counter {
+            color: white;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .delete-photo-btn {
+            background: #c44;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 4px;
+        }
+
         .style-preview {
             padding: 10px;
             margin: 10px 0;
@@ -462,19 +504,9 @@
             border: 1px solid #eee;
             display: none;
         }
-        .add-product-form.visible {
-            display: block;
-        }
-        .add-product-form h3 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 20px;
-        }
-        .form-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
+        .add-product-form.visible { display: block; }
+        .add-product-form h3 { font-family: 'Playfair Display', serif; margin-bottom: 20px; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-row input, .form-row select, .form-row textarea {
             flex: 1;
             padding: 10px;
@@ -491,6 +523,31 @@
             transition: all 0.3s ease;
         }
         .add-product-btn:hover { background: #9b6236; transform: translateY(-2px); }
+
+        /* Миниатюры фото в админ-режиме */
+        .product-images-thumb {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .thumb-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-image-btn {
+            background: #b97f44;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
 
         footer { text-align: center; padding: 40px 0; color: #aaa; font-size: 0.7rem; border-top: 1px solid #f0f0f0; margin-top: 20px; }
         .notification {
@@ -535,10 +592,7 @@
             margin: 15px 0;
             flex-wrap: wrap;
         }
-        .padding-control input {
-            width: 100px;
-            padding: 8px;
-        }
+        .padding-control input { width: 100px; padding: 8px; }
         
         .edit-text-btn {
             background: #111;
@@ -718,15 +772,28 @@
             <option value="original">Оригинал</option>
             <option value="print">Принт</option>
         </select>
-        <input type="file" id="editProductImageUpload" accept="image/*">
-        <div id="currentProductImagePreview" style="width:80px; height:80px; background-size:cover; margin-top:8px; border:1px solid #ddd;"></div>
         <button id="saveProductBtn">Сохранить</button>
+    </div>
+</div>
+
+<!-- Галерея/Лайтбокс для просмотра фото -->
+<div class="modal lightbox" id="lightboxModal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeLightbox">&times;</span>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="">
+        <div class="lightbox-nav">
+            <button id="prevImgBtn"><i class="fas fa-chevron-left"></i> Назад</button>
+            <button id="nextImgBtn">Вперёд <i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+        <button id="deleteFromLightboxBtn" class="delete-photo-btn" style="display:none;">🗑️ Удалить это фото</button>
     </div>
 </div>
 
 <input type="file" id="uploadHeroImage" accept="image/*" style="display:none">
 <input type="file" id="uploadArtistImage" accept="image/*" style="display:none">
 <input type="file" id="uploadGalleryImage" accept="image/*" style="display:none">
+<input type="file" id="tempProductImageUpload" accept="image/*" style="display:none">
 
 <script>
     // ===== ШРИФТЫ =====
@@ -758,14 +825,14 @@
     applyFont(currentFont);
     applyPadding(currentPadding);
     
-    // ТОВАРЫ
+    // ===== СТРУКТУРА ТОВАРОВ С ГАЛЕРЕЯМИ =====
     let products = [
-        { id: 1, title: "Вихрь Вдохновения", price: 24500, desc: "масло, холст / 70x90", type: "original", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Вихрь" },
-        { id: 2, title: "Сила Земли", price: 18700, desc: "акрил, холст / 60x80", type: "original", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Сила+Земли" },
-        { id: 3, title: "Лунная София", price: 32000, desc: "масло / авторская техника", type: "original", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Лунная+София" },
-        { id: 4, title: "Печать Рода", price: 12500, desc: "цифровой принт / 50x60", type: "print", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Печать+Рода" },
-        { id: 5, title: "Рассветное прозрение", price: 9500, desc: "лимитированный принт", type: "print", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Рассвет" },
-        { id: 6, title: "Танцующая тишина", price: 27800, desc: "масло, текстуры", type: "original", imageUrl: "https://placehold.co/600x700/f5f0eb/b97f44?text=Танцующая" }
+        { id: 1, title: "Вихрь Вдохновения", price: 24500, desc: "масло, холст / 70x90", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Вихрь+1", "https://placehold.co/800x1000/f0e5d8/b97f44?text=Вихрь+2"], mainImageIndex: 0 },
+        { id: 2, title: "Сила Земли", price: 18700, desc: "акрил, холст / 60x80", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Сила+Земли"], mainImageIndex: 0 },
+        { id: 3, title: "Лунная София", price: 32000, desc: "масло / авторская техника", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Лунная+София"], mainImageIndex: 0 },
+        { id: 4, title: "Печать Рода", price: 12500, desc: "цифровой принт / 50x60", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Печать+Рода"], mainImageIndex: 0 },
+        { id: 5, title: "Рассветное прозрение", price: 9500, desc: "лимитированный принт", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Рассвет"], mainImageIndex: 0 },
+        { id: 6, title: "Танцующая тишина", price: 27800, desc: "масло, текстуры", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Танцующая"], mainImageIndex: 0 }
     ];
     
     let siteTexts = {
@@ -783,10 +850,8 @@
     function loadSettings() {
         const savedProducts = localStorage.getItem('kartini_products');
         if(savedProducts) { try { products = JSON.parse(savedProducts); } catch(e) {} }
-        
         const savedTexts = localStorage.getItem('kartini_texts');
         if(savedTexts) { try { Object.assign(siteTexts, JSON.parse(savedTexts)); } catch(e) {} }
-        
         const savedImages = localStorage.getItem('kartini_images');
         if(savedImages) {
             try {
@@ -808,28 +873,120 @@
         document.getElementById('contactAddress').innerText = siteTexts.contactAddress;
     }
     
-    function saveTexts() {
-        localStorage.setItem('kartini_texts', JSON.stringify(siteTexts));
-    }
+    function saveTexts() { localStorage.setItem('kartini_texts', JSON.stringify(siteTexts)); }
+    function saveProducts() { localStorage.setItem('kartini_products', JSON.stringify(products)); }
     
     loadSettings();
-    if(!localStorage.getItem('kartini_products')) localStorage.setItem('kartini_products', JSON.stringify(products));
+    if(!localStorage.getItem('kartini_products')) saveProducts();
     
     let isAdmin = false;
     let currentEditProductId = null;
     let currentEditType = null;
+    let currentLightboxProduct = null;
+    let currentLightboxIndex = 0;
     
-    function saveProducts() { localStorage.setItem('kartini_products', JSON.stringify(products)); }
+    function showNotif(text) {
+        let n = document.querySelector('.notification');
+        if(n) n.remove();
+        let div = document.createElement('div');
+        div.className = 'notification';
+        div.innerText = text;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 2500);
+    }
+    
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+    
+    // Открытие галереи
+    function openLightbox(productId, startIndex) {
+        const product = products.find(p => p.id === productId);
+        if(!product || !product.images || product.images.length === 0) return;
+        currentLightboxProduct = product;
+        currentLightboxIndex = startIndex;
+        updateLightbox();
+        document.getElementById('lightboxModal').classList.add('active');
+        document.getElementById('deleteFromLightboxBtn').style.display = isAdmin ? 'block' : 'none';
+    }
+    
+    function updateLightbox() {
+        if(!currentLightboxProduct) return;
+        const img = currentLightboxProduct.images[currentLightboxIndex];
+        document.getElementById('lightboxImg').src = img;
+        document.getElementById('lightboxCounter').innerText = `${currentLightboxIndex + 1} / ${currentLightboxProduct.images.length}`;
+    }
+    
+    function nextImage() {
+        if(!currentLightboxProduct) return;
+        if(currentLightboxIndex < currentLightboxProduct.images.length - 1) {
+            currentLightboxIndex++;
+            updateLightbox();
+        }
+    }
+    
+    function prevImage() {
+        if(!currentLightboxProduct) return;
+        if(currentLightboxIndex > 0) {
+            currentLightboxIndex--;
+            updateLightbox();
+        }
+    }
+    
+    function deleteCurrentImage() {
+        if(!currentLightboxProduct || !isAdmin) return;
+        if(currentLightboxProduct.images.length === 1) {
+            showNotif('Нельзя удалить единственное фото товара');
+            return;
+        }
+        currentLightboxProduct.images.splice(currentLightboxIndex, 1);
+        if(currentLightboxIndex >= currentLightboxProduct.images.length) {
+            currentLightboxIndex = currentLightboxProduct.images.length - 1;
+        }
+        if(currentLightboxProduct.mainImageIndex >= currentLightboxProduct.images.length) {
+            currentLightboxProduct.mainImageIndex = 0;
+        }
+        saveProducts();
+        showNotif('Фото удалено');
+        updateLightbox();
+        renderProductGrid('shopGrid', 'original');
+        renderProductGrid('printsGrid', 'print');
+    }
+    
+    function addImageToProduct(productId) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const product = products.find(p => p.id === productId);
+                    if(product) {
+                        if(!product.images) product.images = [];
+                        product.images.push(ev.target.result);
+                        saveProducts();
+                        showNotif('✅ Фото добавлено');
+                        renderProductGrid('shopGrid', 'original');
+                        renderProductGrid('printsGrid', 'print');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    }
     
     function renderProductGrid(containerId, type) {
         const container = document.getElementById(containerId);
         if(!container) return;
         const filtered = products.filter(p => p.type === type);
         if(filtered.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px;">Нет товаров</div>'; return; }
-        container.innerHTML = filtered.map(p => `
+        container.innerHTML = filtered.map(p => {
+            const mainImage = p.images && p.images.length > 0 ? p.images[p.mainImageIndex || 0] : "https://placehold.co/600x700/f5f0eb/b97f44?text=Нет+фото";
+            return `
             <div class="product-card" data-id="${p.id}">
-                <div class="product-img" style="background-image:url('${p.imageUrl}')">
-                    <div class="product-image-upload" data-id="${p.id}">📷 Заменить фото</div>
+                <div class="product-img" style="background-image:url('${mainImage}')">
+                    ${isAdmin ? `<div class="product-image-upload" data-id="${p.id}">📷 Добавить фото</div>` : ''}
                 </div>
                 <div class="product-info">
                     <div class="product-title">${escapeHtml(p.title)}</div>
@@ -841,8 +998,21 @@
                         <button class="delete-btn" data-id="${p.id}">🗑️ Удалить</button>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
+        
+        // Обработчики
+        document.querySelectorAll(`#${containerId} .product-card`).forEach(card => {
+            const id = parseInt(card.dataset.id);
+            card.onclick = (e) => {
+                if(e.target.classList.contains('btn-buy') || e.target.classList.contains('edit-btn') || 
+                   e.target.classList.contains('delete-btn') || e.target.classList.contains('product-image-upload')) return;
+                const product = products.find(p => p.id === id);
+                if(product && product.images && product.images.length > 0) {
+                    openLightbox(id, 0);
+                }
+            };
+        });
         
         document.querySelectorAll(`#${containerId} .btn-buy`).forEach(btn => {
             btn.onclick = (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); const p = products.find(pr => pr.id === id); if(p) showNotif(`✓ ${p.title} — в корзине`); };
@@ -858,46 +1028,16 @@
                 btn.onclick = (e) => { e.stopPropagation(); deleteProduct(parseInt(btn.dataset.id)); };
             });
             document.querySelectorAll(`#${containerId} .product-image-upload`).forEach(btn => {
-                btn.onclick = (e) => { e.stopPropagation(); openProductImageUpload(parseInt(btn.dataset.id)); };
+                btn.onclick = (e) => { e.stopPropagation(); addImageToProduct(parseInt(btn.dataset.id)); };
             });
         }
     }
     
-    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
-    
-    function showNotif(text) {
-        let n = document.querySelector('.notification');
-        if(n) n.remove();
-        let div = document.createElement('div');
-        div.className = 'notification';
-        div.innerText = text;
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 2500);
-    }
-    
-    function openProductImageUpload(id) {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    const p = products.find(pr => pr.id === id);
-                    if(p) { p.imageUrl = ev.target.result; saveProducts(); showNotif('✅ Фото обновлено'); renderProductGrid('shopGrid', 'original'); renderProductGrid('printsGrid', 'print'); }
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-        input.click();
-    }
-    
     function deleteProduct(id) {
-        if(confirm('Удалить эту работу?')) {
+        if(confirm('Удалить этот товар?')) {
             products = products.filter(p => p.id !== id);
             saveProducts();
-            showNotif('Удалено');
+            showNotif('Товар удалён');
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
         }
@@ -911,7 +1051,6 @@
             document.getElementById('editProductPrice').value = p.price;
             document.getElementById('editProductDesc').value = p.desc;
             document.getElementById('editProductType').value = p.type;
-            document.getElementById('currentProductImagePreview').style.backgroundImage = `url('${p.imageUrl}')`;
             document.getElementById('editProductModal').classList.add('active');
         }
     }
@@ -923,22 +1062,22 @@
             p.price = parseInt(document.getElementById('editProductPrice').value);
             p.desc = document.getElementById('editProductDesc').value;
             p.type = document.getElementById('editProductType').value;
-            const file = document.getElementById('editProductImageUpload').files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => { p.imageUrl = ev.target.result; saveProducts(); showNotif('Сохранено'); document.getElementById('editProductModal').classList.remove('active'); renderProductGrid('shopGrid', 'original'); renderProductGrid('printsGrid', 'print'); };
-                reader.readAsDataURL(file);
-            } else { saveProducts(); showNotif('Сохранено'); document.getElementById('editProductModal').classList.remove('active'); renderProductGrid('shopGrid', 'original'); renderProductGrid('printsGrid', 'print'); }
+            saveProducts();
+            showNotif('Сохранено');
+            document.getElementById('editProductModal').classList.remove('active');
+            renderProductGrid('shopGrid', 'original');
+            renderProductGrid('printsGrid', 'print');
         }
     }
     
     function addNewProduct(type, title, price, desc, imageFile) {
         if(!title || !price) { showNotif('Заполните название и цену'); return false; }
         const newId = Date.now();
-        let imageUrl = "https://placehold.co/600x700/f5f0eb/b97f44?text=" + encodeURIComponent(title);
+        let images = ["https://placehold.co/800x1000/f5f0eb/b97f44?text=" + encodeURIComponent(title)];
         
         const finishAdd = (imgUrl) => {
-            const newProduct = { id: newId, title, price: parseInt(price), desc, type, imageUrl: imgUrl };
+            if(imgUrl) images = [imgUrl];
+            const newProduct = { id: newId, title, price: parseInt(price), desc, type, images, mainImageIndex: 0 };
             products.push(newProduct);
             saveProducts();
             showNotif(`✅ "${title}" добавлен в ${type === 'original' ? 'Магазин' : 'Принты'}`);
@@ -951,7 +1090,7 @@
             reader.onload = (ev) => { finishAdd(ev.target.result); };
             reader.readAsDataURL(imageFile);
         } else {
-            finishAdd(imageUrl);
+            finishAdd(null);
         }
         return true;
     }
@@ -1003,7 +1142,6 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
-    // Первоначальный рендер
     renderProductGrid('shopGrid', 'original');
     renderProductGrid('printsGrid', 'print');
     
@@ -1012,7 +1150,7 @@
     });
     document.getElementById('exploreShopBtn')?.addEventListener('click', () => showPage('shop'));
     
-    // === АДМИН-ПАНЕЛЬ ===
+    // Админ-панель
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const loginModal = document.getElementById('loginModal');
     const adminPanelModal = document.getElementById('adminPanelModal');
@@ -1022,17 +1160,25 @@
     const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
     const closeProductModal = document.getElementById('closeProductModal');
     const closeTextModal = document.getElementById('closeTextModal');
+    const closeLightbox = document.getElementById('closeLightbox');
     const saveProductBtn = document.getElementById('saveProductBtn');
     const saveTextBtn = document.getElementById('saveTextBtn');
     const paddingSlider = document.getElementById('paddingSlider');
     const applyPaddingBtn = document.getElementById('applyPaddingBtn');
+    const prevImgBtn = document.getElementById('prevImgBtn');
+    const nextImgBtn = document.getElementById('nextImgBtn');
+    const deleteFromLightboxBtn = document.getElementById('deleteFromLightboxBtn');
     
     adminLoginBtn.onclick = () => loginModal.classList.add('active');
     closeModal.onclick = () => loginModal.classList.remove('active');
     closeProductModal.onclick = () => document.getElementById('editProductModal').classList.remove('active');
     closeTextModal.onclick = () => document.getElementById('editTextModal').classList.remove('active');
+    closeLightbox.onclick = () => document.getElementById('lightboxModal').classList.remove('active');
     saveProductBtn.onclick = saveProductEdit;
     saveTextBtn.onclick = saveTextEdit;
+    prevImgBtn.onclick = prevImage;
+    nextImgBtn.onclick = nextImage;
+    deleteFromLightboxBtn.onclick = deleteCurrentImage;
     
     closeAdminModal.onclick = () => adminPanelModal.classList.remove('active');
     closeAdminPanelBtn.onclick = () => adminPanelModal.classList.remove('active');
@@ -1056,7 +1202,6 @@
             adminLoginBtn.classList.add('logged-in');
             adminLoginBtn.innerHTML = '<i class="fas fa-user-check"></i> Админ';
             
-            // ПОКАЗЫВАЕМ ВСЕ АДМИН-ЭЛЕМЕНТЫ
             document.getElementById('addShopForm').classList.add('visible');
             document.getElementById('addPrintsForm').classList.add('visible');
             document.querySelectorAll('.edit-text-btn').forEach(btn => btn.classList.add('visible'));
@@ -1065,7 +1210,6 @@
             document.getElementById('uploadArtistImageBtn').style.display = 'block';
             document.getElementById('uploadGalleryImageBtn').style.display = 'block';
             
-            // Назначаем обработчики
             document.getElementById('uploadHeroBtnAdm').onclick = () => document.getElementById('uploadHeroImage').click();
             document.getElementById('editHeroTextBtn').onclick = () => openTextEditor('hero');
             document.getElementById('uploadArtistImageBtn').onclick = () => document.getElementById('uploadArtistImage').click();
@@ -1075,46 +1219,36 @@
                 btn.onclick = () => openTextEditor(btn.dataset.type);
             });
             
-            // Перерендериваем товары с админ-кнопками
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
             adminPanelModal.classList.add('active');
         } else { showNotif('Неверный пароль!'); }
     };
     
-    // Обработчики добавления товаров
-    const addShopBtn = document.getElementById('addShopProductBtn');
-    const addPrintBtn = document.getElementById('addPrintProductBtn');
+    document.getElementById('addShopProductBtn')?.addEventListener('click', () => {
+        const title = document.getElementById('newShopTitle').value;
+        const price = document.getElementById('newShopPrice').value;
+        const desc = document.getElementById('newShopDesc').value;
+        const imageFile = document.getElementById('newShopImage').files[0];
+        addNewProduct('original', title, price, desc, imageFile);
+        document.getElementById('newShopTitle').value = '';
+        document.getElementById('newShopPrice').value = '';
+        document.getElementById('newShopDesc').value = '';
+        document.getElementById('newShopImage').value = '';
+    });
     
-    if(addShopBtn) {
-        addShopBtn.addEventListener('click', () => {
-            const title = document.getElementById('newShopTitle').value;
-            const price = document.getElementById('newShopPrice').value;
-            const desc = document.getElementById('newShopDesc').value;
-            const imageFile = document.getElementById('newShopImage').files[0];
-            addNewProduct('original', title, price, desc, imageFile);
-            document.getElementById('newShopTitle').value = '';
-            document.getElementById('newShopPrice').value = '';
-            document.getElementById('newShopDesc').value = '';
-            document.getElementById('newShopImage').value = '';
-        });
-    }
+    document.getElementById('addPrintProductBtn')?.addEventListener('click', () => {
+        const title = document.getElementById('newPrintTitle').value;
+        const price = document.getElementById('newPrintPrice').value;
+        const desc = document.getElementById('newPrintDesc').value;
+        const imageFile = document.getElementById('newPrintImage').files[0];
+        addNewProduct('print', title, price, desc, imageFile);
+        document.getElementById('newPrintTitle').value = '';
+        document.getElementById('newPrintPrice').value = '';
+        document.getElementById('newPrintDesc').value = '';
+        document.getElementById('newPrintImage').value = '';
+    });
     
-    if(addPrintBtn) {
-        addPrintBtn.addEventListener('click', () => {
-            const title = document.getElementById('newPrintTitle').value;
-            const price = document.getElementById('newPrintPrice').value;
-            const desc = document.getElementById('newPrintDesc').value;
-            const imageFile = document.getElementById('newPrintImage').files[0];
-            addNewProduct('print', title, price, desc, imageFile);
-            document.getElementById('newPrintTitle').value = '';
-            document.getElementById('newPrintPrice').value = '';
-            document.getElementById('newPrintDesc').value = '';
-            document.getElementById('newPrintImage').value = '';
-        });
-    }
-    
-    // Загрузка фото
     document.getElementById('uploadHeroImage').onchange = (e) => {
         const file = e.target.files[0];
         if(file) {
