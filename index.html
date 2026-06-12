@@ -421,19 +421,6 @@
         .product-title { font-size: 1.1rem; font-weight: 400; }
         .product-price { color: #888; margin: 8px 0; font-size: 0.85rem; }
         .product-desc { font-size: 0.75rem; color: #aaa; }
-        .btn-buy {
-            margin-top: 14px;
-            background: none;
-            color: #111;
-            border: 1px solid #ddd;
-            padding: 6px 18px;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .btn-buy:hover { background: #111; color: white; }
 
         .product-image-upload {
             position: absolute;
@@ -926,25 +913,13 @@
     }
     
     function addImageToProduct(productId) {
-        showNotif('📸 Выберите файл с фото...');
-        
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/jpeg, image/png, image/webp, image/jpg';
         input.onchange = (e) => {
             const file = e.target.files[0];
-            if(!file) { 
-                showNotif('Файл не выбран'); 
-                return; 
-            }
-            
-            if(file.size > 5 * 1024 * 1024) {
-                showNotif('Файл слишком большой! Максимум 5 МБ');
-                return;
-            }
-            
-            showNotif('📤 Загрузка фото...');
-            
+            if(!file) { showNotif('Файл не выбран'); return; }
+            if(file.size > 5 * 1024 * 1024) { showNotif('Файл слишком большой! Максимум 5 МБ'); return; }
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const product = products.find(p => p.id === productId);
@@ -955,13 +930,9 @@
                     showNotif(`✅ Фото добавлено к "${product.title}"!`);
                     renderProductGrid('shopGrid', 'original');
                     renderProductGrid('printsGrid', 'print');
-                } else {
-                    showNotif('Ошибка: товар не найден');
-                }
+                } else { showNotif('Ошибка: товар не найден'); }
             };
-            reader.onerror = () => { 
-                showNotif('Ошибка при чтении файла'); 
-            };
+            reader.onerror = () => { showNotif('Ошибка при чтении файла'); };
             reader.readAsDataURL(file);
         };
         input.click();
@@ -984,7 +955,6 @@
                     <div class="product-title">${escapeHtml(p.title)}</div>
                     <div class="product-price">${p.price.toLocaleString()} ₽</div>
                     <div class="product-desc">${escapeHtml(p.desc)}</div>
-                    <button class="btn-buy" data-id="${p.id}">В корзину</button>
                     <div class="edit-buttons">
                         <button class="edit-btn" data-id="${p.id}">✏️ Ред.</button>
                         <button class="delete-btn" data-id="${p.id}">🗑️ Удалить</button>
@@ -996,8 +966,7 @@
         document.querySelectorAll(`#${containerId} .product-card`).forEach(card => {
             const id = parseInt(card.dataset.id);
             card.onclick = (e) => {
-                if(e.target.classList.contains('btn-buy') || 
-                   e.target.classList.contains('edit-btn') || 
+                if(e.target.classList.contains('edit-btn') || 
                    e.target.classList.contains('delete-btn') || 
                    e.target.classList.contains('product-image-upload')) {
                     return;
@@ -1009,10 +978,6 @@
                     showNotif('У этого товара нет фото для просмотра');
                 }
             };
-        });
-        
-        document.querySelectorAll(`#${containerId} .btn-buy`).forEach(btn => {
-            btn.onclick = (e) => { e.stopPropagation(); const id = parseInt(btn.dataset.id); const p = products.find(pr => pr.id === id); if(p) showNotif(`✓ ${p.title} — в корзине (демо)`); };
         });
         
         if(isAdmin) {
