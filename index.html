@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;500;600&family=Montserrat:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ===== СТИЛИ (сжато для экономии места, но полные) ===== */
+        /* ===== СТИЛИ (сжато для экономии места) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -529,42 +529,11 @@
         .page { display: none; }
         .page.active-page { display: block; }
         
-        .admin-style-panel {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fafafa;
-            border: 1px solid #eee;
-        }
-        .padding-control {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-        .padding-control input { width: 100px; padding: 8px; }
-        
-        .edit-text-btn {
-            background: #111;
-            color: white;
-            border: none;
-            padding: 6px 15px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: none;
-        }
-        .edit-text-btn.visible { display: inline-block; }
-        .edit-text-btn:hover { background: #b97f44; }
-        
         .sync-status {
             margin-top: 10px;
             font-size: 0.7rem;
             color: #666;
         }
-        .sync-status.error { color: #c44; }
-        .sync-status.success { color: #4caf50; }
-        
         .github-setup {
             background: #f0f0f0;
             padding: 10px;
@@ -586,6 +555,45 @@
             cursor: pointer;
             margin-top: 5px;
         }
+        .modal-content .close-modal-big {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content .close-modal-big:hover {
+            color: #c44;
+            transform: scale(1.1);
+        }
+        .style-preview {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+        .style-preview:hover { background: #f5f5f5; border-color: #b97f44; }
+        .style-preview.selected { border-color: #b97f44; background: #faf5f0; }
+        .padding-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        .padding-control input { width: 100px; padding: 8px; }
     </style>
 </head>
 <body>
@@ -608,6 +616,7 @@
 
 <main>
     <div class="container">
+        <!-- Главная -->
         <div id="page-home" class="page active-page">
             <div class="hero-full" id="heroSection" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 800\'%3E%3Cdefs%3E%3ClinearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%238B5A2B\'/%3E%3Cstop offset=\'50%25\' stop-color=\'%23B97F44\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%23D4A373\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'1200\' height=\'800\' fill=\'url(%23g)\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'220\' fill=\'none\' stroke=\'rgba(255,255,255,0.15)\' stroke-width=\'2\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'160\' fill=\'none\' stroke=\'rgba(255,255,255,0.1)\' stroke-width=\'1.5\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'100\' fill=\'none\' stroke=\'rgba(255,255,255,0.08)\' stroke-width=\'1\'/%3E%3C/svg%3E')">
                 <div class="hero-content">
@@ -621,6 +630,7 @@
             <div style="margin-top:40px; text-align:center;"><p style="color:#666;">Современная живопись / Энергия цвета</p></div>
         </div>
 
+        <!-- Магазин -->
         <div id="page-shop" class="page">
             <div class="section-title">Оригиналы</div>
             <div class="products-grid" id="shopGrid"></div>
@@ -638,6 +648,7 @@
             </div>
         </div>
 
+        <!-- Принты -->
         <div id="page-prints" class="page">
             <div class="section-title">Принты</div>
             <div class="products-grid" id="printsGrid"></div>
@@ -655,6 +666,7 @@
             </div>
         </div>
 
+        <!-- О себе -->
         <div id="page-about" class="page">
             <div class="section-title">Художник</div>
             <div class="about-flex">
@@ -668,6 +680,7 @@
             </div>
         </div>
 
+        <!-- Контакты -->
         <div id="page-contacts" class="page">
             <div class="section-title">Контакты</div>
             <div class="contacts-grid">
@@ -698,6 +711,7 @@
     </div>
 </div>
 
+<!-- Модальное окно входа -->
 <div class="modal" id="loginModal">
     <div class="modal-content">
         <span class="close-modal" id="closeModal">&times;</span>
@@ -707,12 +721,32 @@
     </div>
 </div>
 
+<!-- Модальное окно админ-панели (только GitHub синхронизация) -->
 <div class="modal" id="adminPanelModal">
-    <div class="modal-content" style="max-width: 600px;">
-        <span class="close-modal" id="closeAdminModal">&times;</span>
-        <h3>⚙️ Настройки сайта</h3>
+    <div class="modal-content" style="max-width: 500px;">
+        <button class="close-modal-big" id="closeAdminPanelModalBtn">&times;</button>
+        <h3>🔧 Админ-панель</h3>
+        <div class="github-setup">
+            <h4 style="margin-bottom: 10px;">☁️ GitHub синхронизация</h4>
+            <input type="text" id="githubRepo" placeholder="Имя репозитория (username/repo-name)">
+            <input type="password" id="githubToken" placeholder="GitHub токен (Personal Access Token)">
+            <button id="saveGitHubSettingsBtn">💾 Сохранить настройки</button>
+            <button id="syncNowBtn" style="background:#4caf50;">🔄 Загрузить из GitHub</button>
+            <button id="uploadToGitHubBtn" style="background:#b97f44; margin-top:5px;">☁️ Отправить в GitHub</button>
+            <div id="syncStatus" class="sync-status"></div>
+            <p style="font-size:10px; margin-top:8px;">Токен хранится только в вашем браузере</p>
+        </div>
+        <button id="closeAdminPanelBtn" style="margin-top: 20px; width: 100%;">Закрыть</button>
+    </div>
+</div>
+
+<!-- Отдельное модальное окно для настроек шрифтов и отступов -->
+<div class="modal" id="styleSettingsModal">
+    <div class="modal-content" style="max-width: 500px;">
+        <button class="close-modal-big" id="closeStyleSettingsModalBtn">&times;</button>
+        <h3>🎨 Настройки стиля</h3>
         <div class="admin-style-panel">
-            <h4 style="margin-bottom: 15px;">🎨 Шрифт сайта</h4>
+            <h4 style="margin-bottom: 15px;">Шрифт сайта</h4>
             <div id="fontSelector">
                 <div class="style-preview" data-font="modern"><strong>Современный</strong><br><span style="font-family: 'Inter', sans-serif;">Интер — чистый и строгий шрифт</span></div>
                 <div class="style-preview" data-font="elegant"><strong>Элегантный</strong><br><span style="font-family: 'Playfair Display', serif;">Playfair Display — классический</span></div>
@@ -727,23 +761,14 @@
                 <span id="paddingValue">24px</span>
                 <button id="applyPaddingBtn">Применить</button>
             </div>
-            
-            <div class="github-setup">
-                <h4 style="margin-bottom: 10px;">☁️ GitHub синхронизация</h4>
-                <input type="text" id="githubRepo" placeholder="Имя репозитория (например: username/kartini-data)">
-                <input type="password" id="githubToken" placeholder="GitHub токен">
-                <button id="saveGitHubSettingsBtn">💾 Сохранить настройки</button>
-                <button id="syncNowBtn" style="background:#4caf50;">🔄 Синхронизировать сейчас</button>
-                <div id="syncStatus" class="sync-status"></div>
-            </div>
         </div>
-        <button id="closeAdminPanelBtn" style="margin-top: 20px; width: 100%;">Закрыть</button>
+        <button id="closeStyleSettingsBtn" style="margin-top: 20px; width: 100%;">Закрыть</button>
     </div>
 </div>
 
 <div class="modal" id="editTextModal">
     <div class="modal-content">
-        <span class="close-modal" id="closeTextModal">&times;</span>
+        <button class="close-modal-big" id="closeTextModalBtn">&times;</button>
         <h3 id="editTextTitle">Редактировать</h3>
         <textarea id="editTextArea" rows="8"></textarea>
         <button id="saveTextBtn">Сохранить</button>
@@ -752,7 +777,7 @@
 
 <div class="modal" id="editProductModal">
     <div class="modal-content">
-        <span class="close-modal" id="closeProductModal">&times;</span>
+        <button class="close-modal-big" id="closeProductModalBtn">&times;</button>
         <h3>Редактировать товар</h3>
         <input type="text" id="editProductTitle" placeholder="Название">
         <input type="number" id="editProductPrice" placeholder="Цена">
@@ -783,9 +808,14 @@
 <input type="file" id="uploadGalleryImage" accept="image/*" style="display:none">
 
 <script>
-    // ===== GitHub НАСТРОЙКИ =====
+    // ===== НАСТРОЙКИ GITHUB И СТИЛЕЙ =====
     let GITHUB_REPO = localStorage.getItem('github_repo') || '';
     let GITHUB_TOKEN = localStorage.getItem('github_token') || '';
+    const DATA_FILE_PATH = "site-data.json";
+    
+    // Настройки стилей
+    let currentFont = localStorage.getItem('siteFont') || 'modern';
+    let currentPadding = parseInt(localStorage.getItem('sitePadding')) || 24;
     
     // Базовые данные
     let products = [];
@@ -807,7 +837,33 @@
     let currentLightboxProduct = null;
     let currentLightboxIndex = 0;
     
-    // Функции для работы с GitHub
+    // Шрифты
+    const fonts = {
+        modern: { main: "'Inter', sans-serif", heading: "'Inter', sans-serif" },
+        elegant: { main: "'Playfair Display', serif", heading: "'Playfair Display', serif" },
+        handwritten: { main: "'Caveat', cursive", heading: "'Caveat', cursive" },
+        strict: { main: "'Montserrat', sans-serif", heading: "'Montserrat', sans-serif" },
+        airy: { main: "'Josefin Sans', sans-serif", heading: "'Josefin Sans', sans-serif" }
+    };
+    
+    function applyFont(fontName) {
+        document.documentElement.style.setProperty('--main-font', fonts[fontName].main);
+        document.documentElement.style.setProperty('--heading-font', fonts[fontName].heading);
+        localStorage.setItem('siteFont', fontName);
+        currentFont = fontName;
+    }
+    
+    function applyPadding(padding) {
+        document.documentElement.style.setProperty('--container-padding', padding + 'px');
+        localStorage.setItem('sitePadding', padding);
+        currentPadding = padding;
+        const paddingValueSpan = document.getElementById('paddingValue');
+        const paddingSliderElem = document.getElementById('paddingSlider');
+        if(paddingValueSpan) paddingValueSpan.innerText = padding + 'px';
+        if(paddingSliderElem) paddingSliderElem.value = padding;
+    }
+    
+    // Функции синхронизации
     function showNotif(text, isError = false) {
         let n = document.querySelector('.notification');
         if(n) n.remove();
@@ -819,19 +875,29 @@
         setTimeout(() => div.remove(), 2500);
     }
     
-    async function saveToGitHub(data, filename = 'site-data.json') {
+    async function uploadToGitHub() {
         if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            showNotif('⚠️ GitHub не настроен. Заполните репозиторий и токен.', true);
+            showNotif('⚠️ Сначала настройте GitHub репозиторий и токен', true);
             return false;
         }
         
+        const fullData = {
+            products: products,
+            siteTexts: siteTexts,
+            siteImages: siteImages,
+            siteFont: currentFont,
+            sitePadding: currentPadding,
+            version: Date.now(),
+            lastUpdated: new Date().toISOString()
+        };
+        
         try {
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-            
+            showNotif('🔄 Отправка в GitHub...');
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(fullData, null, 2))));
             let sha = null;
             try {
-                const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
+                    headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
                 });
                 if(getRes.ok) {
                     const fileData = await getRes.json();
@@ -839,10 +905,10 @@
                 }
             } catch(e) {}
             
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Authorization': `Bearer ${GITHUB_TOKEN}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -853,149 +919,86 @@
             });
             
             if(response.ok) {
+                showNotif('✅ Данные отправлены в GitHub!');
                 const statusDiv = document.getElementById('syncStatus');
                 if(statusDiv) {
-                    statusDiv.innerHTML = '✅ Данные сохранены в GitHub';
+                    statusDiv.innerHTML = '✅ Отправлено в GitHub!';
                     statusDiv.className = 'sync-status success';
                     setTimeout(() => { if(statusDiv) statusDiv.innerHTML = ''; }, 3000);
                 }
-                showNotif('✅ Данные сохранены в GitHub');
                 return true;
             } else {
-                const error = await response.json();
-                console.error('GitHub ошибка:', error);
-                if(document.getElementById('syncStatus')) {
-                    document.getElementById('syncStatus').innerHTML = '❌ Ошибка сохранения: ' + (error.message || 'неизвестная ошибка');
-                    document.getElementById('syncStatus').className = 'sync-status error';
-                }
-                showNotif('❌ Ошибка сохранения в GitHub', true);
-                return false;
+                throw new Error('Ошибка отправки');
             }
         } catch(error) {
-            console.error('Ошибка:', error);
-            if(document.getElementById('syncStatus')) {
-                document.getElementById('syncStatus').innerHTML = '❌ Ошибка соединения: ' + error.message;
-                document.getElementById('syncStatus').className = 'sync-status error';
-            }
-            showNotif('❌ Ошибка соединения с GitHub', true);
+            console.error(error);
+            showNotif('❌ Ошибка отправки: ' + error.message, true);
             return false;
         }
     }
     
-    async function loadFromGitHub(filename = 'site-data.json') {
+    async function downloadFromGitHub() {
         if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            console.log('GitHub не настроен');
-            return null;
+            showNotif('⚠️ Сначала настройте GitHub репозиторий и токен', true);
+            return false;
         }
         
         try {
-            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filename}`, {
-                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            showNotif('🔄 Загрузка из GitHub...');
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
+                headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
             });
             
-            if(response.ok) {
-                const fileData = await response.json();
-                const content = decodeURIComponent(escape(atob(fileData.content)));
-                return JSON.parse(content);
+            if(response.status === 404) {
+                showNotif('Файл данных не найден. Сначала отправьте данные в GitHub.', true);
+                return false;
             }
-            return null;
-        } catch(error) {
-            console.error('Ошибка загрузки:', error);
-            return null;
-        }
-    }
-    
-    async function syncAllData() {
-        if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            showNotif('⚠️ Сначала настройте GitHub в админ-панели', true);
-            if(document.getElementById('syncStatus')) {
-                document.getElementById('syncStatus').innerHTML = '⚠️ Сначала настройте GitHub';
-                document.getElementById('syncStatus').className = 'sync-status error';
-            }
-            return;
-        }
-        
-        showNotif('🔄 Синхронизация с GitHub...');
-        if(document.getElementById('syncStatus')) {
-            document.getElementById('syncStatus').innerHTML = '🔄 Синхронизация...';
-            document.getElementById('syncStatus').className = 'sync-status';
-        }
-        
-        const fullData = {
-            products: products,
-            siteTexts: siteTexts,
-            siteImages: siteImages,
-            version: Date.now()
-        };
-        
-        await saveToGitHub(fullData, 'site-data.json');
-    }
-    
-    async function loadFromGitHubAndApply() {
-        if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            return;
-        }
-        
-        showNotif('🔄 Загрузка данных из GitHub...');
-        const data = await loadFromGitHub('site-data.json');
-        
-        if(data) {
-            if(data.products) products = data.products;
-            if(data.siteTexts) Object.assign(siteTexts, data.siteTexts);
-            if(data.siteImages) Object.assign(siteImages, data.siteImages);
+            if(!response.ok) throw new Error('Ошибка загрузки');
+            
+            const data = await response.json();
+            const content = decodeURIComponent(escape(atob(data.content)));
+            const cloudData = JSON.parse(content);
+            
+            if(cloudData.products) products = cloudData.products;
+            if(cloudData.siteTexts) Object.assign(siteTexts, cloudData.siteTexts);
+            if(cloudData.siteImages) Object.assign(siteImages, cloudData.siteImages);
+            if(cloudData.siteFont) applyFont(cloudData.siteFont);
+            if(cloudData.sitePadding) applyPadding(cloudData.sitePadding);
+            
+            localStorage.setItem('kartini_products', JSON.stringify(products));
+            localStorage.setItem('kartini_texts', JSON.stringify(siteTexts));
+            localStorage.setItem('kartini_images', JSON.stringify(siteImages));
             
             applyTexts();
             applyImages();
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
-            showNotif('✅ Данные загружены из GitHub');
-            if(document.getElementById('syncStatus')) {
-                document.getElementById('syncStatus').innerHTML = '✅ Данные загружены из GitHub';
-                document.getElementById('syncStatus').className = 'sync-status success';
-                setTimeout(() => { if(document.getElementById('syncStatus')) document.getElementById('syncStatus').innerHTML = ''; }, 3000);
-            }
-        } else {
-            // Если данных нет, создаём начальные
-            if(products.length === 0) {
-                products = [
-                    { id: 1, title: "Вихрь Вдохновения", price: 24500, desc: "масло, холст / 70x90", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Вихрь"], mainImageIndex: 0 },
-                    { id: 2, title: "Сила Земли", price: 18700, desc: "акрил, холст / 60x80", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Сила+Земли"], mainImageIndex: 0 },
-                    { id: 3, title: "Лунная София", price: 32000, desc: "масло / авторская техника", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Лунная+София"], mainImageIndex: 0 },
-                    { id: 4, title: "Печать Рода", price: 12500, desc: "цифровой принт / 50x60", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Печать+Рода"], mainImageIndex: 0 },
-                    { id: 5, title: "Рассветное прозрение", price: 9500, desc: "лимитированный принт", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Рассвет"], mainImageIndex: 0 },
-                    { id: 6, title: "Танцующая тишина", price: 27800, desc: "масло, текстуры", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Танцующая"], mainImageIndex: 0 }
-                ];
-                renderProductGrid('shopGrid', 'original');
-                renderProductGrid('printsGrid', 'print');
-            }
+            
+            showNotif('✅ Данные загружены из GitHub!');
+            return true;
+        } catch(error) {
+            console.error(error);
+            showNotif('❌ Ошибка загрузки: ' + error.message, true);
+            return false;
         }
     }
     
-    // Сохранение настроек GitHub
     function saveGitHubSettings() {
-        const repo = document.getElementById('githubRepo').value;
-        const token = document.getElementById('githubToken').value;
-        
+        const repo = document.getElementById('githubRepo').value.trim();
+        const token = document.getElementById('githubToken').value.trim();
         if(repo && token) {
             GITHUB_REPO = repo;
             GITHUB_TOKEN = token;
             localStorage.setItem('github_repo', repo);
             localStorage.setItem('github_token', token);
             showNotif('✅ Настройки GitHub сохранены');
-            if(document.getElementById('syncStatus')) {
-                document.getElementById('syncStatus').innerHTML = '✅ Настройки сохранены';
-                document.getElementById('syncStatus').className = 'sync-status success';
-                setTimeout(() => { if(document.getElementById('syncStatus')) document.getElementById('syncStatus').innerHTML = ''; }, 2000);
-            }
-            
-            // Загружаем данные
-            loadFromGitHubAndApply();
+            setTimeout(() => downloadFromGitHub(), 500);
         } else {
             showNotif('❌ Заполните оба поля', true);
         }
     }
     
-    // ===== ОСТАЛЬНЫЕ ФУНКЦИИ =====
+    // Остальные функции
     function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
     
     function applyImages() {
@@ -1030,8 +1033,7 @@
     
     function updateLightbox() {
         if(!currentLightboxProduct) return;
-        const img = currentLightboxProduct.images[currentLightboxIndex];
-        document.getElementById('lightboxImg').src = img;
+        document.getElementById('lightboxImg').src = currentLightboxProduct.images[currentLightboxIndex];
         document.getElementById('lightboxCounter').innerText = `${currentLightboxIndex + 1} / ${currentLightboxProduct.images.length}`;
     }
     
@@ -1044,7 +1046,7 @@
         currentLightboxProduct.images.splice(currentLightboxIndex, 1);
         if(currentLightboxIndex >= currentLightboxProduct.images.length) currentLightboxIndex = currentLightboxProduct.images.length - 1;
         if(currentLightboxProduct.mainImageIndex >= currentLightboxProduct.images.length) currentLightboxProduct.mainImageIndex = 0;
-        await syncAllData();
+        await uploadToGitHub();
         showNotif('Фото удалено');
         updateLightbox();
         renderProductGrid('shopGrid', 'original');
@@ -1065,13 +1067,12 @@
                 if(product) {
                     if(!product.images) product.images = [];
                     product.images.push(ev.target.result);
-                    await syncAllData();
+                    await uploadToGitHub();
                     showNotif(`✅ Фото добавлено к "${product.title}"!`);
                     renderProductGrid('shopGrid', 'original');
                     renderProductGrid('printsGrid', 'print');
                 } else { showNotif('Ошибка: товар не найден'); }
             };
-            reader.onerror = () => { showNotif('Ошибка при чтении файла'); };
             reader.readAsDataURL(file);
         };
         input.click();
@@ -1130,7 +1131,7 @@
     async function deleteProduct(id) {
         if(confirm('Удалить этот товар?')) {
             products = products.filter(p => p.id !== id);
-            await syncAllData();
+            await uploadToGitHub();
             showNotif('Товар удалён');
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
@@ -1156,7 +1157,7 @@
             p.price = parseInt(document.getElementById('editProductPrice').value);
             p.desc = document.getElementById('editProductDesc').value;
             p.type = document.getElementById('editProductType').value;
-            await syncAllData();
+            await uploadToGitHub();
             showNotif('Сохранено');
             document.getElementById('editProductModal').classList.remove('active');
             renderProductGrid('shopGrid', 'original');
@@ -1166,19 +1167,16 @@
     
     async function addNewProduct(type, title, price, desc, imageFile) {
         if(!title || !price) { showNotif('❌ Заполните название и цену'); return false; }
-        
         const newId = Date.now();
-        
         const finishAdd = async (imgUrl) => {
             const images = imgUrl ? [imgUrl] : ["https://placehold.co/800x1000/f5f0eb/b97f44?text=" + encodeURIComponent(title)];
             const newProduct = { id: newId, title, price: parseInt(price), desc, type, images, mainImageIndex: 0 };
             products.push(newProduct);
-            await syncAllData();
+            await uploadToGitHub();
             showNotif(`✅ "${title}" добавлен в ${type === 'original' ? 'Магазин' : 'Принты'}`);
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
         };
-        
         if(imageFile && imageFile.size > 0) {
             if(imageFile.size > 5 * 1024 * 1024) {
                 showNotif('Файл слишком большой! Максимум 5 МБ');
@@ -1187,7 +1185,6 @@
             }
             const reader = new FileReader();
             reader.onload = (ev) => { finishAdd(ev.target.result); };
-            reader.onerror = () => { finishAdd(null); showNotif('Ошибка чтения файла, фото не добавлено'); };
             reader.readAsDataURL(imageFile);
         } else {
             finishAdd(null);
@@ -1227,7 +1224,7 @@
             case 'phone': siteTexts.contactPhone = newText; document.getElementById('contactPhone').innerText = newText; break;
             case 'address': siteTexts.contactAddress = newText; document.getElementById('contactAddress').innerText = newText; break;
         }
-        await syncAllData();
+        await uploadToGitHub();
         showNotif('Сохранено');
         document.getElementById('editTextModal').classList.remove('active');
     }
@@ -1242,36 +1239,30 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
-    // Шрифты
-    const fonts = {
-        modern: { main: "'Inter', sans-serif", heading: "'Inter', sans-serif" },
-        elegant: { main: "'Playfair Display', serif", heading: "'Playfair Display', serif" },
-        handwritten: { main: "'Caveat', cursive", heading: "'Caveat', cursive" },
-        strict: { main: "'Montserrat', sans-serif", heading: "'Montserrat', sans-serif" },
-        airy: { main: "'Josefin Sans', sans-serif", heading: "'Josefin Sans', sans-serif" }
-    };
-    
-    let currentFont = localStorage.getItem('siteFont') || 'modern';
-    let currentPadding = parseInt(localStorage.getItem('sitePadding')) || 24;
-    
-    function applyFont(fontName) {
-        document.documentElement.style.setProperty('--main-font', fonts[fontName].main);
-        document.documentElement.style.setProperty('--heading-font', fonts[fontName].heading);
-        localStorage.setItem('siteFont', fontName);
-    }
-    
-    function applyPadding(padding) {
-        document.documentElement.style.setProperty('--container-padding', padding + 'px');
-        localStorage.setItem('sitePadding', padding);
-        currentPadding = padding;
-        document.getElementById('paddingValue').innerText = padding + 'px';
-        document.getElementById('paddingSlider').value = padding;
-    }
-    
     applyFont(currentFont);
     applyPadding(currentPadding);
     
-    // Инициализация
+    function loadLocalData() {
+        const savedProducts = localStorage.getItem('kartini_products');
+        if(savedProducts) { try { products = JSON.parse(savedProducts); } catch(e) {} }
+        const savedTexts = localStorage.getItem('kartini_texts');
+        if(savedTexts) { try { Object.assign(siteTexts, JSON.parse(savedTexts)); } catch(e) {} }
+        const savedImages = localStorage.getItem('kartini_images');
+        if(savedImages) { try { Object.assign(siteImages, JSON.parse(savedImages)); } catch(e) {} }
+    }
+    
+    loadLocalData();
+    if(products.length === 0) {
+        products = [
+            { id: 1, title: "Вихрь Вдохновения", price: 24500, desc: "масло, холст / 70x90", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Вихрь"], mainImageIndex: 0 },
+            { id: 2, title: "Сила Земли", price: 18700, desc: "акрил, холст / 60x80", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Сила+Земли"], mainImageIndex: 0 },
+            { id: 3, title: "Лунная София", price: 32000, desc: "масло / авторская техника", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Лунная+София"], mainImageIndex: 0 },
+            { id: 4, title: "Печать Рода", price: 12500, desc: "цифровой принт / 50x60", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Печать+Рода"], mainImageIndex: 0 },
+            { id: 5, title: "Рассветное прозрение", price: 9500, desc: "лимитированный принт", type: "print", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Рассвет"], mainImageIndex: 0 },
+            { id: 6, title: "Танцующая тишина", price: 27800, desc: "масло, текстуры", type: "original", images: ["https://placehold.co/800x1000/f5f0eb/b97f44?text=Танцующая"], mainImageIndex: 0 }
+        ];
+    }
+    
     renderProductGrid('shopGrid', 'original');
     renderProductGrid('printsGrid', 'print');
     applyTexts();
@@ -1286,10 +1277,16 @@
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const loginModal = document.getElementById('loginModal');
     const adminPanelModal = document.getElementById('adminPanelModal');
+    const styleSettingsModal = document.getElementById('styleSettingsModal');
     const submitLogin = document.getElementById('submitLogin');
     const closeModal = document.getElementById('closeModal');
     const closeAdminModal = document.getElementById('closeAdminModal');
     const closeAdminPanelBtn = document.getElementById('closeAdminPanelBtn');
+    const closeAdminPanelModalBtn = document.getElementById('closeAdminPanelModalBtn');
+    const closeProductModalBtn = document.getElementById('closeProductModalBtn');
+    const closeTextModalBtn = document.getElementById('closeTextModalBtn');
+    const closeStyleSettingsModalBtn = document.getElementById('closeStyleSettingsModalBtn');
+    const closeStyleSettingsBtn = document.getElementById('closeStyleSettingsBtn');
     const closeProductModal = document.getElementById('closeProductModal');
     const closeTextModal = document.getElementById('closeTextModal');
     const lightboxModal = document.getElementById('lightboxModal');
@@ -1304,8 +1301,22 @@
     
     adminLoginBtn.onclick = () => loginModal.classList.add('active');
     closeModal.onclick = () => loginModal.classList.remove('active');
-    closeProductModal.onclick = () => document.getElementById('editProductModal').classList.remove('active');
-    closeTextModal.onclick = () => document.getElementById('editTextModal').classList.remove('active');
+    
+    // Закрытие окон
+    const closeAdminPanel = () => adminPanelModal.classList.remove('active');
+    const closeStyleSettings = () => styleSettingsModal.classList.remove('active');
+    const closeEditProduct = () => document.getElementById('editProductModal').classList.remove('active');
+    const closeEditText = () => document.getElementById('editTextModal').classList.remove('active');
+    
+    if(closeAdminModal) closeAdminModal.onclick = closeAdminPanel;
+    if(closeAdminPanelBtn) closeAdminPanelBtn.onclick = closeAdminPanel;
+    if(closeAdminPanelModalBtn) closeAdminPanelModalBtn.onclick = closeAdminPanel;
+    if(closeProductModalBtn) closeProductModalBtn.onclick = closeEditProduct;
+    if(closeProductModal) closeProductModal.onclick = closeEditProduct;
+    if(closeTextModalBtn) closeTextModalBtn.onclick = closeEditText;
+    if(closeTextModal) closeTextModal.onclick = closeEditText;
+    if(closeStyleSettingsModalBtn) closeStyleSettingsModalBtn.onclick = closeStyleSettings;
+    if(closeStyleSettingsBtn) closeStyleSettingsBtn.onclick = closeStyleSettings;
     lightboxCloseBtn.onclick = () => lightboxModal.classList.remove('active');
     saveProductBtn.onclick = saveProductEdit;
     saveTextBtn.onclick = saveTextEdit;
@@ -1313,30 +1324,38 @@
     nextImgBtn.onclick = nextImage;
     deleteFromLightboxBtn.onclick = deleteCurrentImage;
     
-    closeAdminModal.onclick = () => adminPanelModal.classList.remove('active');
-    closeAdminPanelBtn.onclick = () => adminPanelModal.classList.remove('active');
-    
+    // Выбор шрифта
     document.querySelectorAll('.style-preview').forEach(el => {
         el.onclick = () => {
             const font = el.dataset.font;
             applyFont(font);
             showNotif(`Шрифт изменён на ${el.querySelector('strong').innerText}`);
+            uploadToGitHub(); // сохраняем в облако
         };
     });
     
-    paddingSlider.oninput = () => { document.getElementById('paddingValue').innerText = paddingSlider.value + 'px'; };
-    applyPaddingBtn.onclick = () => { applyPadding(parseInt(paddingSlider.value)); showNotif(`Отступы изменены на ${paddingSlider.value}px`); };
+    if(paddingSlider) {
+        paddingSlider.oninput = () => {
+            const paddingSpan = document.getElementById('paddingValue');
+            if(paddingSpan) paddingSpan.innerText = paddingSlider.value + 'px';
+        };
+    }
+    if(applyPaddingBtn) {
+        applyPaddingBtn.onclick = () => {
+            applyPadding(parseInt(paddingSlider.value));
+            showNotif(`Отступы изменены на ${paddingSlider.value}px`);
+            uploadToGitHub(); // сохраняем в облако
+        };
+    }
     
-    // Привязываем GitHub кнопки (ВАЖНО!)
+    // Облачные кнопки
     const saveGitHubSettingsBtn = document.getElementById('saveGitHubSettingsBtn');
     const syncNowBtn = document.getElementById('syncNowBtn');
+    const uploadToGitHubBtn = document.getElementById('uploadToGitHubBtn');
     
-    if(saveGitHubSettingsBtn) {
-        saveGitHubSettingsBtn.onclick = saveGitHubSettings;
-    }
-    if(syncNowBtn) {
-        syncNowBtn.onclick = syncAllData;
-    }
+    if(saveGitHubSettingsBtn) saveGitHubSettingsBtn.onclick = saveGitHubSettings;
+    if(syncNowBtn) syncNowBtn.onclick = downloadFromGitHub;
+    if(uploadToGitHubBtn) uploadToGitHubBtn.onclick = uploadToGitHub;
     
     submitLogin.onclick = () => {
         if(document.getElementById('adminPassword').value === 'Sila8isskustve') {
@@ -1367,24 +1386,30 @@
             renderProductGrid('printsGrid', 'print');
             adminPanelModal.classList.add('active');
             
-            // Загружаем настройки GitHub из localStorage в поля ввода
-            if(GITHUB_REPO) {
-                const repoInput = document.getElementById('githubRepo');
-                if(repoInput) repoInput.value = GITHUB_REPO;
-            }
-            if(GITHUB_TOKEN) {
-                const tokenInput = document.getElementById('githubToken');
-                if(tokenInput) tokenInput.value = GITHUB_TOKEN;
-            }
+            if(GITHUB_REPO) document.getElementById('githubRepo').value = GITHUB_REPO;
+            if(GITHUB_TOKEN) document.getElementById('githubToken').value = GITHUB_TOKEN;
+            
+            setTimeout(() => downloadFromGitHub(), 500);
         } else { showNotif('Неверный пароль!'); }
     };
     
+    // Кнопка открытия настроек стиля (добавляем в админ-панель)
+    const styleSettingsBtn = document.createElement('button');
+    styleSettingsBtn.innerHTML = '🎨 Настройки стиля (шрифты, отступы)';
+    styleSettingsBtn.style.cssText = 'background:#b97f44; color:white; border:none; padding:10px; margin-top:15px; width:100%; cursor:pointer; border-radius:4px;';
+    styleSettingsBtn.onclick = () => styleSettingsModal.classList.add('active');
+    const adminPanelContent = document.querySelector('#adminPanelModal .modal-content');
+    if(adminPanelContent) {
+        adminPanelContent.appendChild(styleSettingsBtn);
+    }
+    
     document.getElementById('addShopProductBtn')?.addEventListener('click', () => {
-        const title = document.getElementById('newShopTitle').value;
-        const price = document.getElementById('newShopPrice').value;
-        const desc = document.getElementById('newShopDesc').value;
-        const imageFile = document.getElementById('newShopImage').files[0];
-        addNewProduct('original', title, price, desc, imageFile);
+        addNewProduct('original', 
+            document.getElementById('newShopTitle').value,
+            document.getElementById('newShopPrice').value,
+            document.getElementById('newShopDesc').value,
+            document.getElementById('newShopImage').files[0]
+        );
         document.getElementById('newShopTitle').value = '';
         document.getElementById('newShopPrice').value = '';
         document.getElementById('newShopDesc').value = '';
@@ -1392,11 +1417,12 @@
     });
     
     document.getElementById('addPrintProductBtn')?.addEventListener('click', () => {
-        const title = document.getElementById('newPrintTitle').value;
-        const price = document.getElementById('newPrintPrice').value;
-        const desc = document.getElementById('newPrintDesc').value;
-        const imageFile = document.getElementById('newPrintImage').files[0];
-        addNewProduct('print', title, price, desc, imageFile);
+        addNewProduct('print',
+            document.getElementById('newPrintTitle').value,
+            document.getElementById('newPrintPrice').value,
+            document.getElementById('newPrintDesc').value,
+            document.getElementById('newPrintImage').files[0]
+        );
         document.getElementById('newPrintTitle').value = '';
         document.getElementById('newPrintPrice').value = '';
         document.getElementById('newPrintDesc').value = '';
@@ -1410,7 +1436,8 @@
             reader.onload = async (ev) => {
                 siteImages.hero = ev.target.result;
                 document.getElementById('heroSection').style.backgroundImage = `url('${siteImages.hero}')`;
-                await syncAllData();
+                localStorage.setItem('kartini_images', JSON.stringify(siteImages));
+                await uploadToGitHub();
                 showNotif('✅ Фото шапки обновлено');
             };
             reader.readAsDataURL(file);
@@ -1423,7 +1450,8 @@
             reader.onload = async (ev) => {
                 siteImages.artist = ev.target.result;
                 document.getElementById('artistImage').style.backgroundImage = `url('${siteImages.artist}')`;
-                await syncAllData();
+                localStorage.setItem('kartini_images', JSON.stringify(siteImages));
+                await uploadToGitHub();
                 showNotif('✅ Фото художницы обновлено');
             };
             reader.readAsDataURL(file);
@@ -1436,7 +1464,8 @@
             reader.onload = async (ev) => {
                 siteImages.gallery = ev.target.result;
                 document.getElementById('galleryImage').style.backgroundImage = `url('${siteImages.gallery}')`;
-                await syncAllData();
+                localStorage.setItem('kartini_images', JSON.stringify(siteImages));
+                await uploadToGitHub();
                 showNotif('✅ Фото галереи обновлено');
             };
             reader.readAsDataURL(file);
