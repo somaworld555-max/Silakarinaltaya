@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;500;600&family=Montserrat:wght@300;400;500;600&family=Josefin+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ===== СТИЛИ (сжато для экономии места) ===== */
+        /* ===== БАЗОВЫЕ СТИЛИ (как в предыдущей версии) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -616,7 +616,6 @@
 
 <main>
     <div class="container">
-        <!-- Главная -->
         <div id="page-home" class="page active-page">
             <div class="hero-full" id="heroSection" style="background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 800\'%3E%3Cdefs%3E%3ClinearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%238B5A2B\'/%3E%3Cstop offset=\'50%25\' stop-color=\'%23B97F44\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%23D4A373\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'1200\' height=\'800\' fill=\'url(%23g)\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'220\' fill=\'none\' stroke=\'rgba(255,255,255,0.15)\' stroke-width=\'2\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'160\' fill=\'none\' stroke=\'rgba(255,255,255,0.1)\' stroke-width=\'1.5\'/%3E%3Ccircle cx=\'600\' cy=\'400\' r=\'100\' fill=\'none\' stroke=\'rgba(255,255,255,0.08)\' stroke-width=\'1\'/%3E%3C/svg%3E')">
                 <div class="hero-content">
@@ -630,7 +629,6 @@
             <div style="margin-top:40px; text-align:center;"><p style="color:#666;">Современная живопись / Энергия цвета</p></div>
         </div>
 
-        <!-- Магазин -->
         <div id="page-shop" class="page">
             <div class="section-title">Оригиналы</div>
             <div class="products-grid" id="shopGrid"></div>
@@ -648,7 +646,6 @@
             </div>
         </div>
 
-        <!-- Принты -->
         <div id="page-prints" class="page">
             <div class="section-title">Принты</div>
             <div class="products-grid" id="printsGrid"></div>
@@ -666,7 +663,6 @@
             </div>
         </div>
 
-        <!-- О себе -->
         <div id="page-about" class="page">
             <div class="section-title">Художник</div>
             <div class="about-flex">
@@ -680,7 +676,6 @@
             </div>
         </div>
 
-        <!-- Контакты -->
         <div id="page-contacts" class="page">
             <div class="section-title">Контакты</div>
             <div class="contacts-grid">
@@ -711,7 +706,6 @@
     </div>
 </div>
 
-<!-- Модальное окно входа -->
 <div class="modal" id="loginModal">
     <div class="modal-content">
         <span class="close-modal" id="closeModal">&times;</span>
@@ -721,7 +715,6 @@
     </div>
 </div>
 
-<!-- Модальное окно админ-панели (только GitHub синхронизация) -->
 <div class="modal" id="adminPanelModal">
     <div class="modal-content" style="max-width: 500px;">
         <button class="close-modal-big" id="closeAdminPanelModalBtn">&times;</button>
@@ -731,16 +724,13 @@
             <input type="text" id="githubRepo" placeholder="Имя репозитория (username/repo-name)">
             <input type="password" id="githubToken" placeholder="GitHub токен (Personal Access Token)">
             <button id="saveGitHubSettingsBtn">💾 Сохранить настройки</button>
-            <button id="syncNowBtn" style="background:#4caf50;">🔄 Загрузить из GitHub</button>
-            <button id="uploadToGitHubBtn" style="background:#b97f44; margin-top:5px;">☁️ Отправить в GitHub</button>
             <div id="syncStatus" class="sync-status"></div>
-            <p style="font-size:10px; margin-top:8px;">Токен хранится только в вашем браузере</p>
+            <p style="font-size:10px; margin-top:8px;">Автоматическая синхронизация: любые изменения сразу сохраняются в облако и видны всем.</p>
         </div>
         <button id="closeAdminPanelBtn" style="margin-top: 20px; width: 100%;">Закрыть</button>
     </div>
 </div>
 
-<!-- Отдельное модальное окно для настроек шрифтов и отступов -->
 <div class="modal" id="styleSettingsModal">
     <div class="modal-content" style="max-width: 500px;">
         <button class="close-modal-big" id="closeStyleSettingsModalBtn">&times;</button>
@@ -808,14 +798,11 @@
 <input type="file" id="uploadGalleryImage" accept="image/*" style="display:none">
 
 <script>
-    // ===== НАСТРОЙКИ GITHUB И СТИЛЕЙ =====
+    // ===== НАСТРОЙКИ GITHUB =====
     let GITHUB_REPO = localStorage.getItem('github_repo') || '';
     let GITHUB_TOKEN = localStorage.getItem('github_token') || '';
     const DATA_FILE_PATH = "site-data.json";
-    
-    // Настройки стилей
-    let currentFont = localStorage.getItem('siteFont') || 'modern';
-    let currentPadding = parseInt(localStorage.getItem('sitePadding')) || 24;
+    let syncInProgress = false;
     
     // Базовые данные
     let products = [];
@@ -837,7 +824,7 @@
     let currentLightboxProduct = null;
     let currentLightboxIndex = 0;
     
-    // Шрифты
+    // Шрифты и отступы
     const fonts = {
         modern: { main: "'Inter', sans-serif", heading: "'Inter', sans-serif" },
         elegant: { main: "'Playfair Display', serif", heading: "'Playfair Display', serif" },
@@ -845,6 +832,9 @@
         strict: { main: "'Montserrat', sans-serif", heading: "'Montserrat', sans-serif" },
         airy: { main: "'Josefin Sans', sans-serif", heading: "'Josefin Sans', sans-serif" }
     };
+    
+    let currentFont = localStorage.getItem('siteFont') || 'modern';
+    let currentPadding = parseInt(localStorage.getItem('sitePadding')) || 24;
     
     function applyFont(fontName) {
         document.documentElement.style.setProperty('--main-font', fonts[fontName].main);
@@ -857,13 +847,12 @@
         document.documentElement.style.setProperty('--container-padding', padding + 'px');
         localStorage.setItem('sitePadding', padding);
         currentPadding = padding;
-        const paddingValueSpan = document.getElementById('paddingValue');
-        const paddingSliderElem = document.getElementById('paddingSlider');
-        if(paddingValueSpan) paddingValueSpan.innerText = padding + 'px';
-        if(paddingSliderElem) paddingSliderElem.value = padding;
+        const paddingSpan = document.getElementById('paddingValue');
+        const slider = document.getElementById('paddingSlider');
+        if(paddingSpan) paddingSpan.innerText = padding + 'px';
+        if(slider) slider.value = padding;
     }
     
-    // Функции синхронизации
     function showNotif(text, isError = false) {
         let n = document.querySelector('.notification');
         if(n) n.remove();
@@ -875,11 +864,10 @@
         setTimeout(() => div.remove(), 2500);
     }
     
+    // ===== ФУНКЦИИ СИНХРОНИЗАЦИИ =====
     async function uploadToGitHub() {
-        if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            showNotif('⚠️ Сначала настройте GitHub репозиторий и токен', true);
-            return false;
-        }
+        if(!GITHUB_REPO || !GITHUB_TOKEN) return false;
+        if(syncInProgress) return false;
         
         const fullData = {
             products: products,
@@ -892,7 +880,7 @@
         };
         
         try {
-            showNotif('🔄 Отправка в GitHub...');
+            syncInProgress = true;
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(fullData, null, 2))));
             let sha = null;
             try {
@@ -918,42 +906,38 @@
                 })
             });
             
+            syncInProgress = false;
             if(response.ok) {
-                showNotif('✅ Данные отправлены в GitHub!');
-                const statusDiv = document.getElementById('syncStatus');
-                if(statusDiv) {
-                    statusDiv.innerHTML = '✅ Отправлено в GitHub!';
-                    statusDiv.className = 'sync-status success';
-                    setTimeout(() => { if(statusDiv) statusDiv.innerHTML = ''; }, 3000);
-                }
                 return true;
             } else {
-                throw new Error('Ошибка отправки');
+                console.error('Upload failed', await response.text());
+                return false;
             }
         } catch(error) {
             console.error(error);
-            showNotif('❌ Ошибка отправки: ' + error.message, true);
+            syncInProgress = false;
             return false;
         }
     }
     
     async function downloadFromGitHub() {
-        if(!GITHUB_REPO || !GITHUB_TOKEN) {
-            showNotif('⚠️ Сначала настройте GitHub репозиторий и токен', true);
-            return false;
-        }
+        if(!GITHUB_REPO || !GITHUB_TOKEN) return false;
+        if(syncInProgress) return false;
         
         try {
-            showNotif('🔄 Загрузка из GitHub...');
+            syncInProgress = true;
             const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${DATA_FILE_PATH}`, {
                 headers: { 'Authorization': `Bearer ${GITHUB_TOKEN}` }
             });
             
             if(response.status === 404) {
-                showNotif('Файл данных не найден. Сначала отправьте данные в GitHub.', true);
+                syncInProgress = false;
                 return false;
             }
-            if(!response.ok) throw new Error('Ошибка загрузки');
+            if(!response.ok) {
+                syncInProgress = false;
+                return false;
+            }
             
             const data = await response.json();
             const content = decodeURIComponent(escape(atob(data.content)));
@@ -974,12 +958,26 @@
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
             
-            showNotif('✅ Данные загружены из GitHub!');
+            syncInProgress = false;
             return true;
         } catch(error) {
-            console.error(error);
-            showNotif('❌ Ошибка загрузки: ' + error.message, true);
+            console.error('Download error', error);
+            syncInProgress = false;
             return false;
+        }
+    }
+    
+    // Автоматическая синхронизация после любого изменения
+    async function autoSync() {
+        if(GITHUB_REPO && GITHUB_TOKEN) {
+            await uploadToGitHub();
+        }
+    }
+    
+    // При загрузке страницы загружаем данные из GitHub
+    async function syncOnLoad() {
+        if(GITHUB_REPO && GITHUB_TOKEN) {
+            await downloadFromGitHub();
         }
     }
     
@@ -992,7 +990,7 @@
             localStorage.setItem('github_repo', repo);
             localStorage.setItem('github_token', token);
             showNotif('✅ Настройки GitHub сохранены');
-            setTimeout(() => downloadFromGitHub(), 500);
+            syncOnLoad();
         } else {
             showNotif('❌ Заполните оба поля', true);
         }
@@ -1046,7 +1044,7 @@
         currentLightboxProduct.images.splice(currentLightboxIndex, 1);
         if(currentLightboxIndex >= currentLightboxProduct.images.length) currentLightboxIndex = currentLightboxProduct.images.length - 1;
         if(currentLightboxProduct.mainImageIndex >= currentLightboxProduct.images.length) currentLightboxProduct.mainImageIndex = 0;
-        await uploadToGitHub();
+        await autoSync();
         showNotif('Фото удалено');
         updateLightbox();
         renderProductGrid('shopGrid', 'original');
@@ -1067,7 +1065,7 @@
                 if(product) {
                     if(!product.images) product.images = [];
                     product.images.push(ev.target.result);
-                    await uploadToGitHub();
+                    await autoSync();
                     showNotif(`✅ Фото добавлено к "${product.title}"!`);
                     renderProductGrid('shopGrid', 'original');
                     renderProductGrid('printsGrid', 'print');
@@ -1131,7 +1129,7 @@
     async function deleteProduct(id) {
         if(confirm('Удалить этот товар?')) {
             products = products.filter(p => p.id !== id);
-            await uploadToGitHub();
+            await autoSync();
             showNotif('Товар удалён');
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
@@ -1157,7 +1155,7 @@
             p.price = parseInt(document.getElementById('editProductPrice').value);
             p.desc = document.getElementById('editProductDesc').value;
             p.type = document.getElementById('editProductType').value;
-            await uploadToGitHub();
+            await autoSync();
             showNotif('Сохранено');
             document.getElementById('editProductModal').classList.remove('active');
             renderProductGrid('shopGrid', 'original');
@@ -1172,7 +1170,7 @@
             const images = imgUrl ? [imgUrl] : ["https://placehold.co/800x1000/f5f0eb/b97f44?text=" + encodeURIComponent(title)];
             const newProduct = { id: newId, title, price: parseInt(price), desc, type, images, mainImageIndex: 0 };
             products.push(newProduct);
-            await uploadToGitHub();
+            await autoSync();
             showNotif(`✅ "${title}" добавлен в ${type === 'original' ? 'Магазин' : 'Принты'}`);
             renderProductGrid('shopGrid', 'original');
             renderProductGrid('printsGrid', 'print');
@@ -1224,7 +1222,7 @@
             case 'phone': siteTexts.contactPhone = newText; document.getElementById('contactPhone').innerText = newText; break;
             case 'address': siteTexts.contactAddress = newText; document.getElementById('contactAddress').innerText = newText; break;
         }
-        await uploadToGitHub();
+        await autoSync();
         showNotif('Сохранено');
         document.getElementById('editTextModal').classList.remove('active');
     }
@@ -1302,7 +1300,6 @@
     adminLoginBtn.onclick = () => loginModal.classList.add('active');
     closeModal.onclick = () => loginModal.classList.remove('active');
     
-    // Закрытие окон
     const closeAdminPanel = () => adminPanelModal.classList.remove('active');
     const closeStyleSettings = () => styleSettingsModal.classList.remove('active');
     const closeEditProduct = () => document.getElementById('editProductModal').classList.remove('active');
@@ -1329,33 +1326,27 @@
         el.onclick = () => {
             const font = el.dataset.font;
             applyFont(font);
-            showNotif(`Шрифт изменён на ${el.querySelector('strong').innerText}`);
-            uploadToGitHub(); // сохраняем в облако
+            showNotif(`Шрифт изменён`);
+            autoSync();
         };
     });
     
     if(paddingSlider) {
         paddingSlider.oninput = () => {
-            const paddingSpan = document.getElementById('paddingValue');
-            if(paddingSpan) paddingSpan.innerText = paddingSlider.value + 'px';
+            const span = document.getElementById('paddingValue');
+            if(span) span.innerText = paddingSlider.value + 'px';
         };
     }
     if(applyPaddingBtn) {
         applyPaddingBtn.onclick = () => {
             applyPadding(parseInt(paddingSlider.value));
             showNotif(`Отступы изменены на ${paddingSlider.value}px`);
-            uploadToGitHub(); // сохраняем в облако
+            autoSync();
         };
     }
     
-    // Облачные кнопки
     const saveGitHubSettingsBtn = document.getElementById('saveGitHubSettingsBtn');
-    const syncNowBtn = document.getElementById('syncNowBtn');
-    const uploadToGitHubBtn = document.getElementById('uploadToGitHubBtn');
-    
     if(saveGitHubSettingsBtn) saveGitHubSettingsBtn.onclick = saveGitHubSettings;
-    if(syncNowBtn) syncNowBtn.onclick = downloadFromGitHub;
-    if(uploadToGitHubBtn) uploadToGitHubBtn.onclick = uploadToGitHub;
     
     submitLogin.onclick = () => {
         if(document.getElementById('adminPassword').value === 'Sila8isskustve') {
@@ -1388,12 +1379,10 @@
             
             if(GITHUB_REPO) document.getElementById('githubRepo').value = GITHUB_REPO;
             if(GITHUB_TOKEN) document.getElementById('githubToken').value = GITHUB_TOKEN;
-            
-            setTimeout(() => downloadFromGitHub(), 500);
         } else { showNotif('Неверный пароль!'); }
     };
     
-    // Кнопка открытия настроек стиля (добавляем в админ-панель)
+    // Кнопка открытия настроек стиля
     const styleSettingsBtn = document.createElement('button');
     styleSettingsBtn.innerHTML = '🎨 Настройки стиля (шрифты, отступы)';
     styleSettingsBtn.style.cssText = 'background:#b97f44; color:white; border:none; padding:10px; margin-top:15px; width:100%; cursor:pointer; border-radius:4px;';
@@ -1429,7 +1418,7 @@
         document.getElementById('newPrintImage').value = '';
     });
     
-    document.getElementById('uploadHeroImage').onchange = (e) => {
+    document.getElementById('uploadHeroImage').onchange = async (e) => {
         const file = e.target.files[0];
         if(file) {
             const reader = new FileReader();
@@ -1437,13 +1426,13 @@
                 siteImages.hero = ev.target.result;
                 document.getElementById('heroSection').style.backgroundImage = `url('${siteImages.hero}')`;
                 localStorage.setItem('kartini_images', JSON.stringify(siteImages));
-                await uploadToGitHub();
+                await autoSync();
                 showNotif('✅ Фото шапки обновлено');
             };
             reader.readAsDataURL(file);
         }
     };
-    document.getElementById('uploadArtistImage').onchange = (e) => {
+    document.getElementById('uploadArtistImage').onchange = async (e) => {
         const file = e.target.files[0];
         if(file) {
             const reader = new FileReader();
@@ -1451,13 +1440,13 @@
                 siteImages.artist = ev.target.result;
                 document.getElementById('artistImage').style.backgroundImage = `url('${siteImages.artist}')`;
                 localStorage.setItem('kartini_images', JSON.stringify(siteImages));
-                await uploadToGitHub();
+                await autoSync();
                 showNotif('✅ Фото художницы обновлено');
             };
             reader.readAsDataURL(file);
         }
     };
-    document.getElementById('uploadGalleryImage').onchange = (e) => {
+    document.getElementById('uploadGalleryImage').onchange = async (e) => {
         const file = e.target.files[0];
         if(file) {
             const reader = new FileReader();
@@ -1465,12 +1454,15 @@
                 siteImages.gallery = ev.target.result;
                 document.getElementById('galleryImage').style.backgroundImage = `url('${siteImages.gallery}')`;
                 localStorage.setItem('kartini_images', JSON.stringify(siteImages));
-                await uploadToGitHub();
+                await autoSync();
                 showNotif('✅ Фото галереи обновлено');
             };
             reader.readAsDataURL(file);
         }
     };
+    
+    // Автоматическая синхронизация при загрузке страницы
+    syncOnLoad();
 </script>
 </body>
 </html>
