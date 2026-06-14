@@ -104,8 +104,8 @@
   "siteTexts": {
     "mainTitle": "КАРТИНЫ СИЛЫ",
     "mainSubtitle": "Юлия Ягудина",
-    "heroTitle": "Proverka",
-    "heroSubtitle": "asdasdasdasdasdas",
+    "heroTitle": "ЖИВОПИСЬ ДЛЯ ОТКРЫТИЯ СВОЕЙ ВНУТРЕННЕЙ СИЛЫ",
+    "heroSubtitle": "Образы, меняющие твою Реальность",
     "aboutText": "Юлия Ягудина — автор проекта «Картины Силы». Работает с маслом, акрилом, создавая полотна, наполненные смыслом.\n\nУчастница выставок в России и Европе. Работы находятся в частных коллекциях.",
     "contactEmail": "yulia@kartinisily.ru",
     "contactInstagram": "@yulia_yagudina",
@@ -119,6 +119,6 @@
   },
   "siteFont": "modern",
   "sitePadding": 24,
-  "version": 1781433611489,
-  "lastUpdated": "2026-06-14T10:40:11.489Z"
+  "version": 1781433695961,
+  "lastUpdated": "2026-06-14T10:41:35.961Z"
 }
