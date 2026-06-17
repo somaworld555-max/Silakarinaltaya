@@ -89,6 +89,17 @@
         "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687037164_1781687037620.webp"
       ],
       "mainImageIndex": 0
+    },
+    {
+      "id": 1781687075338,
+      "title": "Проверка  ",
+      "price": 23234,
+      "desc": "фывфывфыв",
+      "type": "print",
+      "images": [
+        "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687075338_1781687075741.webp"
+      ],
+      "mainImageIndex": 0
     }
   ],
   "siteTexts": {
@@ -128,5 +139,5 @@
   },
   "siteFont": "modern",
   "sitePadding": 24,
-  "version": 1781687042055
+  "version": 1781687077703
 }
