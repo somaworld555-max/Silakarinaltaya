@@ -87,7 +87,6 @@
       "type": "original",
       "images": [
         "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687037164_1781687037620.webp",
-        "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687037164_1781687117645_1781687118208.webp",
         "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687037164_1781687135013_1781687135375.webp",
         "https://raw.githubusercontent.com/somaworld555-max/Silakarinaltaya/main/images/product_1781687037164_1781688943337_1781688943688.webp"
       ],
@@ -142,5 +141,5 @@
   },
   "siteFont": "modern",
   "sitePadding": 24,
-  "version": 1781688946762
+  "version": 1781689043654
 }
