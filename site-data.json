@@ -124,7 +124,7 @@
       },
       {
         "name": "VK",
-        "url": "https://vk.com/yulia_yagudina",
+        "url": "https://vk.ru/kartinisili",
         "icon": "fab fa-vk"
       },
       {
@@ -141,5 +141,5 @@
   },
   "siteFont": "modern",
   "sitePadding": 24,
-  "version": 1781689043654
+  "version": 1781697361582
 }
